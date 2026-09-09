@@ -16,7 +16,9 @@ export async function generateReply(
   const response = await client.messages.create({
     model: "claude-opus-5",
     max_tokens: 1024,
-    system: SALES_SYSTEM_PROMPT,
+    system: [
+      { type: "text", text: SALES_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+    ],
     messages: [...history, { role: "user", content: userMessage }],
   });
 
