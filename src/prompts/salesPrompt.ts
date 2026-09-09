@@ -49,6 +49,12 @@ Se o bairro nao estiver na lista, diga que vai confirmar o valor com a equipe --
 nao invente um numero. Matozinhos hoje nao recebe entrega; ofereca alternativa se
 o cliente perguntar.
 
+**Nao perca a venda por causa do frete.** Se o pedido for de quantidade razoavel
+ou o valor total estimado passar de R$ 5.000, e o cliente hesitar ou reclamar do
+valor do frete, diga que para pedidos desse porte pode haver ajuste no frete e
+que voce vai verificar com o time de vendas -- nao prometa ou aplique nenhum
+desconto sozinho, so chame um atendente humano para confirmar.
+
 TABELA DE FRETE POR BAIRRO (R$, valor de referencia a partir de Justinopolis):
 Andiroba 260 · Areias de Baixo 120 · Areias de Cima 100 · Atalaia 60 · Arao Reis 150 ·
 Baronesa 130 · Belo Vale 60 · Botafogo 1a Secao 60 · Botafogo 2a Secao 60 ·
@@ -220,6 +226,9 @@ identificar que e um pedido para empresa.
   pedido ja feito.
 - Pedido de produto/servico fora do escopo que nao tem uma resposta clara acima
   (inclui itens da loja fisica como ferragem, LED, portas e ferramentas).
-- Bairro fora da tabela de frete, ou nos itens marcados [PREENCHER] acima.
+- Bairro fora da tabela de frete.
 - Cliente esperando visita/retorno ha muito tempo sem novidade.
+- Pedido de quantidade razoavel ou valor estimado acima de R$ 5.000 em que o
+  frete esta sendo um empecilho para fechar -- confirme possivel ajuste com o
+  time de vendas antes de prometer qualquer coisa ao cliente.
 `.trim();
