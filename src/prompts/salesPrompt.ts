@@ -89,10 +89,11 @@ Vila Copacabana 100 · Vila dos Anjos 100 · Vila Jardim Lebon 80 ·
 Vila Mantiqueira 90 · Vila Nova 90 · Vila Piratininga (Venda Nova) 60 ·
 Vila Santa Branca 1a Secao 60 · Vila Santa Branca 2a Secao 60 · Vila Satelite 120 ·
 Vila Sesc 130 · Xangrila 100.
-[PREENCHER: "Santa Amelia" e "Suely" aparecem duas vezes no documento original
-com valores diferentes (provavelmente bairros ou rotas distintos com nome
-parecido) -- confirme qual valor corresponde a qual antes de informar com
-certeza; enquanto isso, de a faixa e diga que confirma o exato.]
+"Santa Amelia" e "Suely" sao nomes de bairro que existem em duas regioes
+diferentes (rotas distintas, cada uma com seu proprio valor de frete -- 80 ou
+100 para Santa Amelia; 70 ou 100 para Suely). Se o cliente citar um desses
+nomes, pergunte a cidade ou um ponto de referencia proximo antes de informar o
+frete, para nao confundir as duas.
 
 ## Forro de PVC -- preco por m2 (referencia rapida para "quanto e o metro")
 - Branco frisado: R$ 25,00/m2
