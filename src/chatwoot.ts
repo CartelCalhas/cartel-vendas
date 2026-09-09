@@ -1,3 +1,5 @@
+import { readFile } from "fs/promises";
+import { basename } from "path";
 import { config } from "./config.js";
 
 const apiRoot = `${config.chatwootBaseUrl}/api/v1/accounts/${config.chatwootAccountId}`;
@@ -7,6 +9,12 @@ function headers(): HeadersInit {
     "Content-Type": "application/json",
     api_access_token: config.chatwootApiToken,
   };
+}
+
+// Sem Content-Type aqui de proposito: o fetch define o boundary do
+// multipart/form-data sozinho a partir do FormData.
+function authHeaders(): HeadersInit {
+  return { api_access_token: config.chatwootApiToken };
 }
 
 export interface ChatwootMessage {
@@ -65,6 +73,33 @@ export async function sendReply(
   if (!res.ok) {
     throw new Error(
       `Falha ao enviar resposta na conversa ${conversationId}: ${res.status} ${await res.text()}`,
+    );
+  }
+}
+
+export async function sendAttachment(
+  conversationId: number,
+  filePath: string,
+  content?: string,
+): Promise<void> {
+  const fileBuffer = await readFile(filePath);
+  const form = new FormData();
+  form.append("message_type", "outgoing");
+  if (content) form.append("content", content);
+  form.append(
+    "attachments[]",
+    new Blob([fileBuffer], { type: "application/pdf" }),
+    basename(filePath),
+  );
+
+  const res = await fetch(
+    `${apiRoot}/conversations/${conversationId}/messages`,
+    { method: "POST", headers: authHeaders(), body: form },
+  );
+
+  if (!res.ok) {
+    throw new Error(
+      `Falha ao enviar anexo na conversa ${conversationId}: ${res.status} ${await res.text()}`,
     );
   }
 }

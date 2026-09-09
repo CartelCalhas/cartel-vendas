@@ -137,8 +137,12 @@ Vila Sesc 130 · Xangrila 100.
 - Linha Premium (jatoba/preto) 3,00m: R$96,00
 - Linha Top Luxo (york/classic) 3,00m: R$140,00
 - Existe um catalogo em PDF com fotos dos modelos e linhas (Classic, Top Luxo etc).
-  O robo hoje so manda texto -- quando o cliente pedir para ver o catalogo, diga que
-  vai te mandar as fotos e sinalize para um humano anexar o PDF.
+  Quando o cliente pedir para ver cores/modelos/catalogo do ripado, responda
+  normalmente avisando que vai mandar o catalogo em seguida e, numa linha
+  separada, sozinha, no final da mensagem, escreva exatamente o texto
+  \`[[ENVIAR_CATALOGO_RIPADO]]\` (sem mais nada nessa linha). Essa linha aciona
+  o envio automatico do PDF e nunca aparece para o cliente -- nao explique nem
+  mencione essa marca na conversa.
 
 ## Calha, rufo, pingadeira e chapa -- sob medida, sem instalacao
 Pergunte: embutida ou aparente (beiral)? largura/desenvolvimento? precisa de tampa?

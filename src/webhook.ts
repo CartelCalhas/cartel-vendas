@@ -1,3 +1,4 @@
+import path from "path";
 import type { Request, Response } from "express";
 import { config } from "./config.js";
 import {
@@ -5,9 +6,19 @@ import {
   isIncoming,
   isOutgoing,
   sendReply,
+  sendAttachment,
   type ChatwootMessage,
 } from "./chatwoot.js";
 import { generateReply, type ChatTurn } from "./claude.js";
+
+// Resolvido a partir do diretorio de onde o processo roda (`npm start` /
+// `npm run dev` a partir da raiz do projeto) -- ver assets/README se o
+// arquivo for movido.
+const RIPADO_CATALOG_PATH = path.join(
+  process.cwd(),
+  "assets",
+  "catalogo-ripado.pdf",
+);
 
 // Formato (simplificado) do payload que o Chatwoot envia no evento
 // "message_created" -- ver Settings -> Integrations -> Webhooks no Chatwoot.
@@ -77,8 +88,11 @@ export async function handleChatwootWebhook(
     const history = toChatTurns(recent, payload.id ?? -1);
 
     const reply = await generateReply(history, userMessage);
-    if (reply) {
-      await sendReply(conversationId, reply);
+    if (reply.text) {
+      await sendReply(conversationId, reply.text);
+    }
+    if (reply.sendRipadoCatalog) {
+      await sendAttachment(conversationId, RIPADO_CATALOG_PATH);
     }
   } catch (err) {
     console.error(
