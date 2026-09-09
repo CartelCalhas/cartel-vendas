@@ -53,33 +53,47 @@ function relativeUrlWithParams(
   return url.pathname + url.search;
 }
 
-// Passo 1: mostra quantas conversas foram encontradas e uma estimativa de
-// custo, sem gastar credito da API ainda.
+// Passo 1: busca as conversas no Chatwoot (pode ser lenta com o servico
+// "dormindo" no plano Free) e monta a pagina de estimativa de custo, sem
+// gastar credito da API ainda. Tambem roda em segundo plano com uma pagina
+// de espera, pelo mesmo motivo do passo 2: evitar que o pedido HTTP fique
+// aberto tempo demais e algum proxy no caminho derrube a conexao (502).
 export async function handleReportEstimate(req: Request, res: Response): Promise<void> {
   if (!checkSecret(req, res)) return;
   const months = monthsFromQuery(req);
+  const secret = String(req.query.secret);
+  const startUrl = relativeUrlWithParams(req, "/reports/customers/start", {});
 
-  try {
+  const jobId = createJob();
+  res.status(200).send(
+    renderWaitingPage({
+      jobId,
+      secret,
+      heading: "Buscando suas conversas...",
+      message: "Consultando o Chatwoot. Se o robo estava parado, isso pode levar cerca de 1 minuto para acordar -- pode deixar esta aba aberta.",
+    }),
+  );
+
+  (async () => {
     const loaded = await loadCorpus(months);
     if (!loaded) {
-      res.status(200).send(renderErrorPage(`Nenhuma conversa encontrada nos ultimos ${months} meses.`));
+      completeJob(jobId, renderErrorPage(`Nenhuma conversa encontrada nos ultimos ${months} meses.`));
       return;
     }
     const { list, corpus } = loaded;
     if (!corpus.text) {
-      res.status(200).send(renderErrorPage("As conversas encontradas nao tinham mensagens de texto para analisar."));
+      completeJob(jobId, renderErrorPage("As conversas encontradas nao tinham mensagens de texto para analisar."));
       return;
     }
-
     const inputTokens = await estimateInputTokens(corpus.text);
-    const startUrl = relativeUrlWithParams(req, "/reports/customers/start", {});
-    res.status(200).send(
+    completeJob(
+      jobId,
       renderEstimatePage({ corpus, truncated: list.truncated, months, inputTokens, confirmUrl: startUrl }),
     );
-  } catch (err) {
+  })().catch((err) => {
     console.error("[report] erro na estimativa:", err);
-    res.status(500).send(renderErrorPage(`Erro ao consultar as conversas: ${(err as Error).message}`));
-  }
+    failJob(jobId, (err as Error).message);
+  });
 }
 
 // Passo 2: dispara a analise (paga) em segundo plano e devolve uma pagina
@@ -100,7 +114,12 @@ export async function handleReportStart(req: Request, res: Response): Promise<vo
 
     const jobId = createJob();
     res.status(200).send(
-      renderWaitingPage({ jobId, secret, totalConversations: corpus.totalConversations }),
+      renderWaitingPage({
+        jobId,
+        secret,
+        heading: "Gerando o relatorio...",
+        message: `Analisando ${corpus.totalConversations} conversas com a Claude. Isso pode levar de 1 a 3 minutos -- pode deixar esta aba aberta, ela atualiza sozinha.`,
+      }),
     );
 
     analyzeConversations(corpus.text)

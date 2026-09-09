@@ -131,13 +131,14 @@ function renderChart(monthly: CorpusResult["monthly"]): string {
 export function renderWaitingPage(args: {
   jobId: string;
   secret: string;
-  totalConversations: number;
+  heading: string;
+  message: string;
 }): string {
   const statusUrl = `/reports/customers/status/${args.jobId}?secret=${encodeURIComponent(args.secret)}`;
   const body = `
     <p class="eyebrow">Robo WhatsApp Cartel</p>
-    <h1>Gerando o relatorio...</h1>
-    <p class="lede">Analisando ${args.totalConversations} conversas com a Claude. Isso pode levar de 1 a 3 minutos -- pode deixar esta aba aberta, ela atualiza sozinha.</p>
+    <h1>${escapeHtml(args.heading)}</h1>
+    <p class="lede">${escapeHtml(args.message)}</p>
     <div class="card" style="text-align:center;padding:36px 22px">
       <div id="spinner" style="width:34px;height:34px;margin:0 auto 14px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite"></div>
       <div id="statusText" style="color:var(--muted);font-size:14.5px">Processando...</div>
@@ -167,7 +168,7 @@ export function renderWaitingPage(args: {
       poll();
     </script>
   `;
-  return pageShell("Gerando relatorio...", body);
+  return pageShell(args.heading, body);
 }
 
 export function renderErrorPage(message: string): string {
