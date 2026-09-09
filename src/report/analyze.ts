@@ -76,7 +76,7 @@ export async function analyzeConversations(
     max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(corpus) }],
-    output_config: { format: zodOutputFormat(ReportSchema) },
+    output_config: { format: zodOutputFormat(ReportSchema), effort: "medium" },
   });
 
   if (!response.parsed_output) {

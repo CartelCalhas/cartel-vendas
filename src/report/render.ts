@@ -128,6 +128,48 @@ function renderChart(monthly: CorpusResult["monthly"]): string {
   return `<div class="chart">${cols}</div>`;
 }
 
+export function renderWaitingPage(args: {
+  jobId: string;
+  secret: string;
+  totalConversations: number;
+}): string {
+  const statusUrl = `/reports/customers/status/${args.jobId}?secret=${encodeURIComponent(args.secret)}`;
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Gerando o relatorio...</h1>
+    <p class="lede">Analisando ${args.totalConversations} conversas com a Claude. Isso pode levar de 1 a 3 minutos -- pode deixar esta aba aberta, ela atualiza sozinha.</p>
+    <div class="card" style="text-align:center;padding:36px 22px">
+      <div id="spinner" style="width:34px;height:34px;margin:0 auto 14px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite"></div>
+      <div id="statusText" style="color:var(--muted);font-size:14.5px">Processando...</div>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    <script>
+      const statusUrl = ${JSON.stringify(statusUrl)};
+      const resultUrl = ${JSON.stringify(`/reports/customers/result/${args.jobId}?secret=${encodeURIComponent(args.secret)}`)};
+      async function poll() {
+        try {
+          const res = await fetch(statusUrl);
+          const data = await res.json();
+          if (data.status === "done") {
+            window.location.href = resultUrl;
+            return;
+          }
+          if (data.status === "error") {
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("statusText").textContent = "Erro: " + data.error;
+            return;
+          }
+        } catch (e) {
+          // rede instavel -- so tenta de novo no proximo ciclo
+        }
+        setTimeout(poll, 3000);
+      }
+      poll();
+    </script>
+  `;
+  return pageShell("Gerando relatorio...", body);
+}
+
 export function renderErrorPage(message: string): string {
   return pageShell(
     "Erro no relatorio",

@@ -1,7 +1,12 @@
 import express from "express";
 import { config } from "./config.js";
 import { handleChatwootWebhook } from "./webhook.js";
-import { handleCustomerReport } from "./reportRoute.js";
+import {
+  handleReportEstimate,
+  handleReportStart,
+  handleReportStatus,
+  handleReportResult,
+} from "./reportRoute.js";
 
 const app = express();
 app.use(express.json());
@@ -18,11 +23,21 @@ app.post("/webhooks/chatwoot", (req, res) => {
 
 // Usa o mesmo WEBHOOK_SECRET como chave de acesso administrativo.
 app.get("/reports/customers", (req, res) => {
-  handleCustomerReport(req, res).catch((err) => {
+  handleReportEstimate(req, res).catch((err) => {
     console.error("[report] erro inesperado:", err);
     if (!res.headersSent) res.status(500).send("Erro inesperado.");
   });
 });
+
+app.get("/reports/customers/start", (req, res) => {
+  handleReportStart(req, res).catch((err) => {
+    console.error("[report] erro inesperado:", err);
+    if (!res.headersSent) res.status(500).send("Erro inesperado.");
+  });
+});
+
+app.get("/reports/customers/status/:jobId", handleReportStatus);
+app.get("/reports/customers/result/:jobId", handleReportResult);
 
 app.listen(config.port, () => {
   console.log(`Cartel WhatsApp bot rodando na porta ${config.port}`);
