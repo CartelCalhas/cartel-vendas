@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "./config.js";
 import { handleChatwootWebhook } from "./webhook.js";
+import { handleCustomerReport } from "./reportRoute.js";
 
 const app = express();
 app.use(express.json());
@@ -12,6 +13,14 @@ app.get("/health", (_req, res) => {
 app.post("/webhooks/chatwoot", (req, res) => {
   handleChatwootWebhook(req, res).catch((err) => {
     console.error("[webhook] erro inesperado:", err);
+  });
+});
+
+// Usa o mesmo WEBHOOK_SECRET como chave de acesso administrativo.
+app.get("/reports/customers", (req, res) => {
+  handleCustomerReport(req, res).catch((err) => {
+    console.error("[report] erro inesperado:", err);
+    if (!res.headersSent) res.status(500).send("Erro inesperado.");
   });
 });
 
