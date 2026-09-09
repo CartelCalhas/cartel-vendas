@@ -75,11 +75,11 @@ Nova Pampulha (Vespasiano) 120 · Novo York (Venda Nova) 120 · Pamitel 120 ·
 Papine 60 · Paraiso das Piabas 60 · Parque Sao Pedro 80 · Pedra Branca 80 ·
 Piedade 60 · Piratininga 60 · Planalto 90 · Porto Seguro 80 · Renascessa 160 ·
 Rio Branco 60 · Rosaneves 130 · Rosimeire 80 · San Genario (Neves) 150 ·
-Santa Amelia 80 a 100 · Santa Fe 50 · Santa Luzia 150 · Santa Margarida 100 ·
+Santa Amelia 80 · Santa Fe 50 · Santa Luzia 150 · Santa Margarida 100 ·
 Santa Marta (Neves) 100 · Santa Martinha 100 · Santa Monica 80 ·
 Santana 1a Secao 80 · Santana 2a Secao 80 · Santinho 120 · Savassi (Neves) 90 ·
 Serra Verde 80 ·
-Servilha A 120 · Servilha B 120 · Severina 70 · Sonia 60 · Suely 70 a 100 ·
+Servilha A 120 · Servilha B 120 · Severina 70 · Sonia 60 · Suely 100 ·
 Sao Benedito 120 · Sao Bene 150 · Sao Bernado 100 · Sao Gabriel 150 ·
 Sao Joao Batista 80 · Sao Jose 60 · Sao Judas (Neves) 85 · Sao Luiz (Neves) 100 ·
 Sao Miguel 60 · Sao Tomaz 100 · Tania 150 · Taquaril 300 · Tocantins 70 · Tony 50 ·
@@ -89,11 +89,6 @@ Vila Copacabana 100 · Vila dos Anjos 100 · Vila Jardim Lebon 80 ·
 Vila Mantiqueira 90 · Vila Nova 90 · Vila Piratininga (Venda Nova) 60 ·
 Vila Santa Branca 1a Secao 60 · Vila Santa Branca 2a Secao 60 · Vila Satelite 120 ·
 Vila Sesc 130 · Xangrila 100.
-"Santa Amelia" e "Suely" sao nomes de bairro que existem em duas regioes
-diferentes (rotas distintas, cada uma com seu proprio valor de frete -- 80 ou
-100 para Santa Amelia; 70 ou 100 para Suely). Se o cliente citar um desses
-nomes, pergunte a cidade ou um ponto de referencia proximo antes de informar o
-frete, para nao confundir as duas.
 
 ## Forro de PVC -- preco por m2 (referencia rapida para "quanto e o metro")
 - Branco frisado: R$ 25,00/m2
