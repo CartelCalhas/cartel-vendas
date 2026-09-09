@@ -71,12 +71,14 @@ Lidice 60 · Londrina 150 · Luana 80 · Luar da Pampulha 80 · Mantiqueira 80 �
 Maracana 60 · Maria Helena 60 · Menezes 60 · Minas Caixa 80 · Monte Verde
 (Pipeirao) 80 · Morro Alto 120 · Nossa Senhora Aparecida 60 · Nossa Senhora das
 Neves 100 · Nova America 70 · Nova das Industria 220 · Nova Pampulha 80 ·
-Nova Pampulha (Vespasiano) 120 · Novo York (Venda Nova) 120 · Papine 60 ·
-Paraiso das Piabas 60 · Parque Sao Pedro 80 · Pedra Branca 80 · Piedade 60 ·
-Porto Seguro 80 · Rosaneves 130 · Rosimeire 80 · San Genario (Neves) 150 ·
+Nova Pampulha (Vespasiano) 120 · Novo York (Venda Nova) 120 · Pamitel 120 ·
+Papine 60 · Paraiso das Piabas 60 · Parque Sao Pedro 80 · Pedra Branca 80 ·
+Piedade 60 · Piratininga 60 · Planalto 90 · Porto Seguro 80 · Renascessa 160 ·
+Rio Branco 60 · Rosaneves 130 · Rosimeire 80 · San Genario (Neves) 150 ·
 Santa Amelia 80 a 100 · Santa Fe 50 · Santa Luzia 150 · Santa Margarida 100 ·
 Santa Marta (Neves) 100 · Santa Martinha 100 · Santa Monica 80 ·
-Santana 1a Secao 80 · Santana 2a Secao 80 · Santinho 120 · Serra Verde 80 ·
+Santana 1a Secao 80 · Santana 2a Secao 80 · Santinho 120 · Savassi (Neves) 90 ·
+Serra Verde 80 ·
 Servilha A 120 · Servilha B 120 · Severina 70 · Sonia 60 · Suely 70 a 100 ·
 Sao Benedito 120 · Sao Bene 150 · Sao Bernado 100 · Sao Gabriel 150 ·
 Sao Joao Batista 80 · Sao Jose 60 · Sao Judas (Neves) 85 · Sao Luiz (Neves) 100 ·
@@ -87,11 +89,10 @@ Vila Copacabana 100 · Vila dos Anjos 100 · Vila Jardim Lebon 80 ·
 Vila Mantiqueira 90 · Vila Nova 90 · Vila Piratininga (Venda Nova) 60 ·
 Vila Santa Branca 1a Secao 60 · Vila Santa Branca 2a Secao 60 · Vila Satelite 120 ·
 Vila Sesc 130 · Xangrila 100.
-[PREENCHER: Planalto, Pamitel, Piratininga, Renascessa, Rio Branco e Savassi
-(Neves) estao na lista da equipe mas o valor ficou ilegivel no documento
-original -- confirme antes de informar. "Santa Amelia" e "Suely" aparecem duas
-vezes no documento com valores diferentes -- confirme qual bairro/rota corresponde
-a cada valor.]
+[PREENCHER: "Santa Amelia" e "Suely" aparecem duas vezes no documento original
+com valores diferentes (provavelmente bairros ou rotas distintos com nome
+parecido) -- confirme qual valor corresponde a qual antes de informar com
+certeza; enquanto isso, de a faixa e diga que confirma o exato.]
 
 ## Forro de PVC -- preco por m2 (referencia rapida para "quanto e o metro")
 - Branco frisado: R$ 25,00/m2
