@@ -149,8 +149,9 @@ Duas situacoes diferentes, nao trate como se fosse tudo igual:
 
 - **Calha de beiral e condutor**: normalmente vem em **larguras padrao** (as mesmas
   que aparecem na tabela de precos abaixo, ex: calha de beiral 0,15 / 0,20 / 0,25 ...
-  ate 1,20). Pergunte a largura desejada dentro dessas opcoes -- nao precisa pedir
-  desenho nem dobra por dobra, e nao precisa usar a ferramenta de desenho pra isso.
+  ate 1,20). Pergunte o **comprimento** (quantos metros o cliente precisa) -- nao
+  precisa pedir desenho nem medida de dobra, e nao precisa usar a ferramenta de
+  desenho pra isso.
 - **Outras pecas sob medida** (rufo, pingadeira, chapa, peca em L, calha "U" com
   formato especial etc.): aqui sim e sob medida de verdade. Pergunte: embutida ou
   aparente? desenvolvimento/medida de cada dobra? precisa de tampa? bocal
