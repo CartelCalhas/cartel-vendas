@@ -178,6 +178,72 @@ export function renderErrorPage(message: string): string {
   );
 }
 
+export function renderPendingListPage(args: {
+  pending: { contactName: string; contactHandle: string; lastMessageContent: string; ageHours: number }[];
+  confirmUrl: string;
+}): string {
+  const rows = args.pending
+    .map((p) => {
+      const ageLabel =
+        p.ageHours < 24
+          ? `${Math.round(p.ageHours)}h atras`
+          : `${Math.round(p.ageHours / 24)}d atras`;
+      const snippet =
+        p.lastMessageContent.length > 140
+          ? `${p.lastMessageContent.slice(0, 140)}...`
+          : p.lastMessageContent;
+      return `
+      <div class="qa">
+        <div class="theme">${escapeHtml(p.contactName)}${p.contactHandle ? ` <span style="font-weight:400;color:var(--muted)">(${escapeHtml(p.contactHandle)})</span>` : ""}<span class="pill">${ageLabel}</span></div>
+        <div class="example">"${escapeHtml(snippet)}"</div>
+      </div>`;
+    })
+    .join("");
+
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Conversas sem resposta</h1>
+    <p class="lede">Estas conversas tem a ultima mensagem do cliente sem nenhuma resposta depois (nem humano, nem robo). Confira a lista antes de mandar -- isso vai gerar e enviar uma resposta pra cada uma.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="k">Conversas pendentes</div><div class="v">${args.pending.length}</div></div>
+    </div>
+
+    ${
+      args.pending.length === 0
+        ? `<div class="callout">Nenhuma conversa pendente encontrada -- tudo em dia.</div>`
+        : `<div class="card">${rows}</div>
+           <a class="btn" href="${escapeHtml(args.confirmUrl)}">Responder todas (${args.pending.length}) →</a>`
+    }
+  `;
+  return pageShell("Conversas sem resposta", body);
+}
+
+export function renderPendingResultPage(args: {
+  answered: string[];
+  errors: { contactName: string; error: string }[];
+}): string {
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Respostas enviadas</h1>
+    <div class="stat-row">
+      <div class="stat"><div class="k">Respondidas com sucesso</div><div class="v">${args.answered.length}</div></div>
+      <div class="stat"><div class="k">Com erro</div><div class="v">${args.errors.length}</div></div>
+    </div>
+    ${
+      args.answered.length > 0
+        ? `<div class="card"><ul class="plain">${args.answered.map((n) => `<li>${escapeHtml(n)}</li>`).join("")}</ul></div>`
+        : ""
+    }
+    ${
+      args.errors.length > 0
+        ? `<div class="callout">${args.errors.map((e) => `${escapeHtml(e.contactName)}: ${escapeHtml(e.error)}`).join("<br>")}</div>`
+        : ""
+    }
+  `;
+  return pageShell("Respostas enviadas", body);
+}
+
 export function renderEstimatePage(args: {
   corpus: CorpusResult;
   truncated: boolean;

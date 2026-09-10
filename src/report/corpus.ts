@@ -1,5 +1,6 @@
 import { fetchRecentMessages, isIncoming, isOutgoing } from "../chatwoot.js";
 import type { ConversationSummary } from "../chatwootConversations.js";
+import { withConcurrency } from "../concurrency.js";
 
 export interface MonthlyBucket {
   label: string;
@@ -12,25 +13,6 @@ export interface CorpusResult {
   totalCustomerMessages: number;
   uniqueContacts: number;
   monthly: MonthlyBucket[];
-}
-
-async function withConcurrency<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T) => Promise<R>,
-): Promise<R[]> {
-  const results: R[] = new Array(items.length);
-  let next = 0;
-  async function worker(): Promise<void> {
-    while (next < items.length) {
-      const i = next++;
-      results[i] = await fn(items[i]);
-    }
-  }
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, () => worker()),
-  );
-  return results;
 }
 
 function monthLabel(unixSeconds: number): string {
