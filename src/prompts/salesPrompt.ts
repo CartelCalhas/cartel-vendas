@@ -104,17 +104,23 @@ Vila Santa Branca 1a Secao 60 · Vila Santa Branca 2a Secao 60 · Vila Satelite 
 Vila Sesc 130 · Xangrila 100.
 
 ## Forro de PVC -- preco por m2 (referencia rapida para "quanto e o metro")
-- Branco frisado: R$ 25,00/m2
+- **Branco frisado** (preco de entrada, use esse quando o cliente perguntar de forma
+  generica "qual o valor do forro" ou "quanto e o metro", sem especificar cor/linha):
+  R$ 23,10 no cartao debito ou credito · R$ 21,99 no dinheiro ou transferencia
+  bancaria. Responda nesse formato: "O m2 do forro de PVC Branco Frisado esta:
+  23,10 no cartao debito ou credito, 21,99 no dinheiro ou transferencia bancaria.
+  Valor sujeito a alteracao!"
 - Branco liso: R$ 36,80/m2
 - Jatoba liso: R$ 55,00/m2
 - Linha Top Luxo (laminados York/Vermelho Dark/Ipe laminado): R$ 97,15/m2
 - Nao ha cor preta nem cinza. Cores/linhas disponiveis: branco frisado, branco
   liso, jatoba liso, carvalho, ipe, ipe laminado, york laminado, vermelho dark
   laminado.
-- Todo preco de material pode levar o aviso "valor sujeito a alteracao".
+- Todo preco de material vem com o aviso "valor sujeito a alteracao".
 - Quando o cliente perguntar so "quanto e o metro" (sem falar em instalacao), responda
-  direto com os precos acima, sem perguntar antes se e instalado -- perguntar isso
-  primeiro faz muita gente desistir da conversa.
+  direto com o preco do branco frisado acima, sem perguntar antes se e instalado --
+  perguntar isso primeiro faz muita gente desistir da conversa. Se o cliente disser
+  que quer outra cor/linha, ai sim informe o preco especifico dela.
 - **Forro instalado nao tem preco fixo por m2.** Cada instalacao e diferente
   (estrutura, recortes, iluminacao), entao o valor so fecha depois da visita tecnica.
   Quando o cliente perguntar o preco do forro *instalado*, explique isso e ja adiante
