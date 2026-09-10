@@ -25,6 +25,11 @@ export async function handleChatwootWebhook(
     return;
   }
 
+  if (config.botPaused) {
+    res.status(200).json({ ok: true, paused: true });
+    return;
+  }
+
   // Responde rapido -- o processamento (Claude + Chatwoot) roda em seguida,
   // sem deixar o Chatwoot esperando o round-trip todo.
   res.status(200).json({ ok: true });

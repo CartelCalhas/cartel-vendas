@@ -17,4 +17,8 @@ export const config = {
   chatwootInboxId: process.env.CHATWOOT_INBOX_ID?.trim() || null,
   port: Number(process.env.PORT ?? 3000),
   historyLimit: Number(process.env.HISTORY_LIMIT ?? 15),
+  // Pausa manual do robo -- ver BOT_PAUSED no .env.example. Fica salvo como
+  // variavel de ambiente (nao em arquivo) para nao se perder se o servico
+  // reiniciar sozinho.
+  botPaused: (process.env.BOT_PAUSED ?? "").trim().toLowerCase() === "true",
 };

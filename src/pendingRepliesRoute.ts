@@ -75,6 +75,15 @@ export async function handlePendingStart(req: Request, res: Response): Promise<v
   if (!checkSecret(req, res)) return;
   const secret = String(req.query.secret);
 
+  if (config.botPaused) {
+    res.status(200).send(
+      renderErrorPage(
+        "O robo esta pausado (BOT_PAUSED=true no Render) -- nenhuma mensagem foi enviada. Remova essa variavel de ambiente pra religar antes de tentar de novo.",
+      ),
+    );
+    return;
+  }
+
   const jobId = createJob();
   res.status(200).send(
     renderWaitingPage({
