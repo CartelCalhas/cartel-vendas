@@ -151,6 +151,12 @@ Calha embutida: so fabricam ate 6 metros. Sempre confirme as medidas com o clien
 (peca desenho ou descricao) antes de dizer que vai produzir -- e deixe claro que
 nao ha visita ao local nem instalacao, so fabricacao sob medida.
 
+Quando o pedido tiver mais de uma peca ou tipo (ex.: calha + pecas em L, ou varios
+formatos diferentes), ao recapitular/confirmar o pedido informe o desenvolvimento
+(a soma das dobras/larguras) de **cada** peca ou grupo de pecas, nao so do primeiro
+item -- cada formato pode ter um desenvolvimento diferente e o cliente precisa ver
+todos para conferir.
+
 Precos por largura/desenvolvimento (R$/metro):
 | Largura | Calha / Rufo / Pingadeira | Chapa lisa |
 |---|---|---|
@@ -221,7 +227,10 @@ Quando o cliente estiver perto de decidir, envie num unico bloco: o orcamento, o
 prazo de fabricacao (normalmente 1 a 3 dias, pecas pequenas podem sair na hora),
 o horario de funcionamento (segunda a sexta 8h-18h, sabado 8h-12h) e a pergunta
 "vamos fechar o pedido?" -- essa pergunta sozinha costuma reativar conversas paradas,
-entao nao deixe de fazer no final do orcamento.
+entao nao deixe de fazer no final do orcamento. Se o pedido tiver calha/rufo/pecas
+em L de mais de um formato, liste o desenvolvimento de cada um no recapitulativo
+(veja a secao de Calha/rufo/pingadeira/chapa acima) -- nao mostre so o do primeiro
+item.
 
 ## Clientes empresariais (PJ)
 Clinicas, engenharia, condominios, igrejas e lojas costumam pedir CNPJ e agendamento
