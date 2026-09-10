@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { basename } from "path";
+import { basename, extname } from "path";
 import { config } from "./config.js";
 
 const apiRoot = `${config.chatwootBaseUrl}/api/v1/accounts/${config.chatwootAccountId}`;
@@ -111,15 +111,24 @@ export async function sendAttachments(
   }
 }
 
+const MIME_BY_EXTENSION: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+};
+
 export async function sendAttachment(
   conversationId: number,
   filePath: string,
   content?: string,
 ): Promise<void> {
   const buffer = await readFile(filePath);
+  const ext = extname(filePath).toLowerCase();
+  const mimeType = MIME_BY_EXTENSION[ext] ?? "application/octet-stream";
   await sendAttachments(
     conversationId,
-    [{ buffer, filename: basename(filePath), mimeType: "application/pdf" }],
+    [{ buffer, filename: basename(filePath), mimeType }],
     content,
   );
 }

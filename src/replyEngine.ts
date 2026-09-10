@@ -18,6 +18,11 @@ const RIPADO_CATALOG_PATH = path.join(
   "assets",
   "catalogo-ripado.pdf",
 );
+const ACABAMENTOS_PHOTO_PATH = path.join(
+  process.cwd(),
+  "assets",
+  "acabamentos-moldura.jpg",
+);
 
 export function toChatTurns(
   messages: ChatwootMessage[],
@@ -54,6 +59,9 @@ export async function answerConversation(
   }
   if (reply.sendRipadoCatalog) {
     await sendAttachment(conversationId, RIPADO_CATALOG_PATH);
+  }
+  if (reply.sendAcabamentosPhoto) {
+    await sendAttachment(conversationId, ACABAMENTOS_PHOTO_PATH);
   }
   if (reply.drawings.length > 0) {
     await sendAttachments(

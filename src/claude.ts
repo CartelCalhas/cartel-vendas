@@ -19,14 +19,16 @@ export interface PieceDrawing {
 export interface GeneratedReply {
   text: string;
   sendRipadoCatalog: boolean;
+  sendAcabamentosPhoto: boolean;
   drawings: PieceDrawing[];
 }
 
-// O prompt instrui a Claude a incluir essa marca (em linha propria) quando o
-// cliente pedir pra ver o catalogo do ripado. Ela nunca deve chegar ao
-// cliente nem ficar salva no historico -- por isso e removida aqui antes de
+// O prompt instrui a Claude a incluir essas marcas (em linha propria) quando
+// for o caso de mandar um arquivo fixo. Elas nunca devem chegar ao cliente
+// nem ficar salvas no historico -- por isso sao removidas aqui antes de
 // qualquer coisa ser enviada ao Chatwoot.
 const RIPADO_CATALOG_MARKER = "[[ENVIAR_CATALOGO_RIPADO]]";
+const ACABAMENTOS_PHOTO_MARKER = "[[ENVIAR_FOTO_ACABAMENTOS]]";
 
 const DRAW_PIECE_TOOL: Anthropic.Tool = {
   name: "desenhar_peca",
@@ -144,7 +146,11 @@ export async function generateReply(
 
   const rawText = extractText(response);
   const sendRipadoCatalog = rawText.includes(RIPADO_CATALOG_MARKER);
-  const text = rawText.replaceAll(RIPADO_CATALOG_MARKER, "").trim();
+  const sendAcabamentosPhoto = rawText.includes(ACABAMENTOS_PHOTO_MARKER);
+  const text = rawText
+    .replaceAll(RIPADO_CATALOG_MARKER, "")
+    .replaceAll(ACABAMENTOS_PHOTO_MARKER, "")
+    .trim();
 
-  return { text, sendRipadoCatalog, drawings };
+  return { text, sendRipadoCatalog, sendAcabamentosPhoto, drawings };
 }
