@@ -77,20 +77,27 @@ export async function sendReply(
   }
 }
 
-export async function sendAttachment(
+export interface AttachmentFile {
+  buffer: Buffer;
+  filename: string;
+  mimeType: string;
+}
+
+export async function sendAttachments(
   conversationId: number,
-  filePath: string,
+  files: AttachmentFile[],
   content?: string,
 ): Promise<void> {
-  const fileBuffer = await readFile(filePath);
   const form = new FormData();
   form.append("message_type", "outgoing");
   if (content) form.append("content", content);
-  form.append(
-    "attachments[]",
-    new Blob([fileBuffer], { type: "application/pdf" }),
-    basename(filePath),
-  );
+  for (const file of files) {
+    form.append(
+      "attachments[]",
+      new Blob([new Uint8Array(file.buffer)], { type: file.mimeType }),
+      file.filename,
+    );
+  }
 
   const res = await fetch(
     `${apiRoot}/conversations/${conversationId}/messages`,
@@ -102,4 +109,17 @@ export async function sendAttachment(
       `Falha ao enviar anexo na conversa ${conversationId}: ${res.status} ${await res.text()}`,
     );
   }
+}
+
+export async function sendAttachment(
+  conversationId: number,
+  filePath: string,
+  content?: string,
+): Promise<void> {
+  const buffer = await readFile(filePath);
+  await sendAttachments(
+    conversationId,
+    [{ buffer, filename: basename(filePath), mimeType: "application/pdf" }],
+    content,
+  );
 }

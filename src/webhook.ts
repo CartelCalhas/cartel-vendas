@@ -7,6 +7,7 @@ import {
   isOutgoing,
   sendReply,
   sendAttachment,
+  sendAttachments,
   type ChatwootMessage,
 } from "./chatwoot.js";
 import { generateReply, type ChatTurn } from "./claude.js";
@@ -93,6 +94,16 @@ export async function handleChatwootWebhook(
     }
     if (reply.sendRipadoCatalog) {
       await sendAttachment(conversationId, RIPADO_CATALOG_PATH);
+    }
+    if (reply.drawings.length > 0) {
+      await sendAttachments(
+        conversationId,
+        reply.drawings.map((d) => ({
+          buffer: d.buffer,
+          filename: d.filename,
+          mimeType: "image/png",
+        })),
+      );
     }
   } catch (err) {
     console.error(
