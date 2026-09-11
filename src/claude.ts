@@ -44,11 +44,14 @@ const ACABAMENTOS_PHOTO_MARKER = "[[ENVIAR_FOTO_ACABAMENTOS]]";
 const DRAW_PIECE_TOOL: Anthropic.Tool = {
   name: "desenhar_peca",
   description:
-    "Gera um desenho tecnico simples (tira dimensionada) do desenvolvimento de " +
-    "uma peca de calha/rufo/chapa/peca em L, a partir das medidas de cada dobra " +
-    "que o cliente informou. Use isso sempre que tiver reunido as medidas de uma " +
-    "peca sob medida, antes de pedir para o cliente aprovar. Se o pedido tiver " +
-    "mais de um formato de peca, chame esta ferramenta uma vez para cada formato.",
+    "Gera uma ficha visual de confirmacao da peca (calha, rufo, pingadeira, rincao, " +
+    "cumeeira, chapa, peca em L etc.): desenho dimensionado do desenvolvimento " +
+    "(soma das dobras) mais um cartao com modelo, comprimento, quantidade, bocais, " +
+    "tampas e suporte, quando esses dados ja tiverem sido confirmados com o " +
+    "cliente. Use isso sempre que tiver reunido as medidas de uma peca sob medida, " +
+    "antes de pedir para o cliente aprovar (ele deve responder algo como " +
+    "'APROVADO'). Se o pedido tiver mais de um formato de peca, chame esta " +
+    "ferramenta uma vez para cada formato.",
   input_schema: {
     type: "object",
     properties: {
@@ -63,6 +66,38 @@ const DRAW_PIECE_TOOL: Anthropic.Tool = {
         description:
           "Medida de cada dobra/segmento em milimetros, na ordem informada pelo " +
           "cliente, ex: [25, 30, 30, 30, 25]",
+      },
+      modelo: {
+        type: "string",
+        description:
+          "Nome do produto, ex: 'Calha de Beiral Tradicional', 'Rufo', 'Pingadeira', " +
+          "'Rincao', 'Cumeeira'. Omita se nao souber.",
+      },
+      comprimento_m: {
+        type: "number",
+        description: "Comprimento total solicitado pelo cliente, em metros. Omita se nao souber.",
+      },
+      quantidade: {
+        type: "number",
+        description: "Quantas pecas desse formato o cliente quer. Omita se nao souber.",
+      },
+      bocais: {
+        type: "string",
+        description:
+          "Quantidade/posicao dos bocais ja confirmada com o cliente, ex: '1 bocal lateral'. " +
+          "So preencha o que o cliente ja confirmou -- nunca presuma uma quantidade.",
+      },
+      tampas: {
+        type: "number",
+        description: "Quantidade de tampas ja confirmada com o cliente. Omita se nao souber.",
+      },
+      suporte: {
+        type: "string",
+        description: "Tipo de suporte, ex: 'Colonial' ou 'Amianto'. Omita se nao se aplicar.",
+      },
+      observacoes: {
+        type: "string",
+        description: "Qualquer detalhe extra relevante pra fabricacao. Omita se nao houver.",
       },
     },
     required: ["titulo", "segmentos_mm"],
@@ -131,10 +166,27 @@ export async function generateReply(
         continue;
       }
       try {
-        const input = toolUse.input as { titulo: string; segmentos_mm: number[] };
+        const input = toolUse.input as {
+          titulo: string;
+          segmentos_mm: number[];
+          modelo?: string;
+          comprimento_m?: number;
+          quantidade?: number;
+          bocais?: string;
+          tampas?: number;
+          suporte?: string;
+          observacoes?: string;
+        };
         const buffer = await renderPiecePng({
           titulo: input.titulo,
           segmentosMm: input.segmentos_mm,
+          modelo: input.modelo,
+          comprimentoM: input.comprimento_m,
+          quantidade: input.quantidade,
+          bocais: input.bocais,
+          tampas: input.tampas,
+          suporte: input.suporte,
+          observacoes: input.observacoes,
         });
         drawings.push({
           buffer,
@@ -145,8 +197,9 @@ export async function generateReply(
           type: "tool_result",
           tool_use_id: toolUse.id,
           content:
-            "Desenho gerado com sucesso. Ele sera enviado ao cliente junto com " +
-            "sua proxima mensagem de texto -- peca a aprovacao do cliente.",
+            "Ficha gerada com sucesso. Ela sera enviada ao cliente junto com sua " +
+            "proxima mensagem de texto -- peca a aprovacao do cliente (ele deve " +
+            "responder algo como 'APROVADO').",
         });
       } catch (err) {
         toolResults.push({

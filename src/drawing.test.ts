@@ -25,3 +25,41 @@ test("renderPiecePng: gera um PNG valido (assinatura de arquivo correta)", async
   const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   assert.ok(buffer.subarray(0, 8).equals(pngSignature));
 });
+
+test("buildPieceSvg: sem campos extras, so mostra desenvolvimento e o rodape de aprovacao", () => {
+  const svg = buildPieceSvg({ titulo: "peca simples", segmentosMm: [30, 30] });
+  assert.match(svg, /Desenvolvimento:<\/tspan> 60mm \(6\.0cm\)/);
+  assert.match(svg, /APROVADO/);
+  assert.ok(!svg.includes("Modelo:"));
+  assert.ok(!svg.includes("Bocais:"));
+});
+
+test("buildPieceSvg: ficha de confirmacao mostra so os campos informados", () => {
+  const svg = buildPieceSvg({
+    titulo: "Calha de Beiral Tradicional",
+    segmentosMm: [15, 13, 9, 1.5, 1.5],
+    modelo: "Calha de Beiral Tradicional",
+    comprimentoM: 8,
+    quantidade: 2,
+    bocais: "1 bocal lateral",
+    tampas: 2,
+    suporte: "Colonial",
+  });
+  assert.match(svg, /Modelo:<\/tspan> Calha de Beiral Tradicional/);
+  assert.match(svg, /Comprimento solicitado:<\/tspan> 8m/);
+  assert.match(svg, /Quantidade:<\/tspan> 2 peca\(s\)/);
+  assert.match(svg, /Bocais:<\/tspan> 1 bocal lateral/);
+  assert.match(svg, /Tampas:<\/tspan> 2/);
+  assert.match(svg, /Suporte:<\/tspan> Colonial/);
+  assert.ok(!svg.includes("Observacoes:"));
+});
+
+test("buildPieceSvg: escapa valores dos campos extras da ficha", () => {
+  const svg = buildPieceSvg({
+    titulo: "peca",
+    segmentosMm: [10],
+    observacoes: 'nao cortar <sem> "aprovacao"',
+  });
+  assert.ok(!svg.includes("<sem>"));
+  assert.match(svg, /&lt;sem&gt;/);
+});
