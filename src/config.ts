@@ -33,6 +33,12 @@ export const config = {
   // uma. Aumentar deixa a resposta mais "inteligente" mas mais lenta;
   // diminuir deixa mais rapida mas volta a responder rajadas em duplicidade.
   messageDebounceMs: Number(process.env.MESSAGE_DEBOUNCE_MS ?? 6000),
+  // Quando um atendente humano ja assumiu a conversa, o robo fica quieto --
+  // mas se o cliente ficar esse tempo (ms) sem NENHUMA resposta (nem do
+  // humano, nem do robo), o robo volta a responder pra nao deixar o cliente
+  // esperando indefinidamente. Cada mensagem nova do cliente reinicia a
+  // contagem.
+  humanSilenceTimeoutMs: Number(process.env.HUMAN_SILENCE_TIMEOUT_MS ?? 15 * 60 * 1000),
   // Pausa manual do robo -- ver BOT_PAUSED no .env.example. Fica salvo como
   // variavel de ambiente (nao em arquivo) para nao se perder se o servico
   // reiniciar sozinho.

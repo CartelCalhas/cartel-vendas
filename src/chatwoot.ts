@@ -22,6 +22,20 @@ export function isOutgoing(messageType: number | string): boolean {
   return messageType === 1 || messageType === "outgoing";
 }
 
+// Uma conversa esta "pendente" quando a ultima mensagem de texto (nao
+// privada) e do cliente -- ou seja, ninguem (nem humano, nem robo) respondeu
+// ainda depois dela. Retorna essa mensagem, ou null se a conversa nao esta
+// pendente. Usado tanto pela varredura manual de pendencias quanto pelo
+// fallback automatico de silencio (ver replyEngine.ts).
+export function lastPendingMessage(messages: ChatwootMessage[]): ChatwootMessage | null {
+  const textMessages = messages.filter(
+    (m) => !m.private && (!m.content_type || m.content_type === "text") && m.content,
+  );
+  if (textMessages.length === 0) return null;
+  const last = textMessages.reduce((a, b) => (a.created_at > b.created_at ? a : b));
+  return isIncoming(last.message_type) ? last : null;
+}
+
 export async function fetchRecentMessages(
   conversationId: number,
 ): Promise<ChatwootMessage[]> {

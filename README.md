@@ -122,9 +122,12 @@ fallback caso o override seja apagado.
 
 - **Handoff humano**: antes de responder, o robo confere no Chatwoot se a
   conversa ja tem um atendente designado ou nao esta mais "aberta". Se tiver,
-  ele fica quieto -- nao responde por cima de quem ja esta atendendo. Se nem
-  der pra confirmar isso (erro na API do Chatwoot), tambem prefere nao
-  responder a arriscar um atendimento duplicado.
+  ele fica quieto -- nao responde por cima de quem ja esta atendendo. Mas se
+  o cliente ficar `HUMAN_SILENCE_TIMEOUT_MS` (padrao 15min) sem NENHUMA
+  resposta -- nem do humano, nem do robo -- o robo volta a responder, pra
+  ninguem ficar esperando indefinidamente. Cada mensagem nova do cliente
+  reinicia essa contagem. Se nem der pra confirmar quem esta atendendo (erro
+  na API do Chatwoot), o robo tambem espera antes de responder.
 - **Imagens**: fotos que o cliente manda sao baixadas e enviadas pra Claude
   junto com o texto (o modelo "ve" a foto). Audio, video e outros arquivos o
   robo ainda nao consegue processar sozinho -- nesses casos ele confirma o
