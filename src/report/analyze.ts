@@ -61,7 +61,7 @@ export type InsightsReport = z.infer<typeof ReportSchema>;
 
 export async function estimateInputTokens(corpus: string): Promise<number> {
   const result = await client.messages.countTokens({
-    model: "claude-opus-5",
+    model: config.claudeModel,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(corpus) }],
   });
@@ -72,7 +72,7 @@ export async function analyzeConversations(
   corpus: string,
 ): Promise<{ report: InsightsReport; usage: Anthropic.Usage }> {
   const response = await client.messages.parse({
-    model: "claude-opus-5",
+    model: config.claudeModel,
     max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(corpus) }],

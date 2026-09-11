@@ -2,3 +2,7 @@ node_modules/
 dist/
 .env
 *.log
+# Estado local persistido em disco (jobs de relatorio, override do prompt de
+# vendas) -- especifico de cada ambiente, nunca deve ir pro git.
+data/
+.test-data/

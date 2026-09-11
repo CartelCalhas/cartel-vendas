@@ -74,8 +74,14 @@ const SHELL_HEAD = `
   .btn {
     display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
     font-weight: 600; padding: 12px 22px; border-radius: 8px; font-size: 15px; margin-top: 6px;
+    border: none; cursor: pointer; font-family: inherit;
   }
   .btn:hover { background: var(--accent-ink); }
+  textarea.editor {
+    width: 100%; min-height: 360px; font-family: "IBM Plex Mono", monospace; font-size: 13px;
+    padding: 14px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box;
+    background: var(--surface); color: var(--ink); resize: vertical;
+  }
   section { margin-top: 40px; }
   section > h2 { font-size: 20px; font-weight: 600; margin-bottom: 14px; }
   ul.plain { margin: 0; padding-left: 20px; }
@@ -130,11 +136,13 @@ function renderChart(monthly: CorpusResult["monthly"]): string {
 
 export function renderWaitingPage(args: {
   jobId: string;
-  secret: string;
   heading: string;
   message: string;
 }): string {
-  const statusUrl = `/reports/customers/status/${args.jobId}?secret=${encodeURIComponent(args.secret)}`;
+  // Sem `secret` na URL: a autenticacao agora e HTTP Basic Auth, que o
+  // navegador reenvia sozinho (por origem) em toda chamada seguinte a este
+  // dominio, inclusive nesses fetch() de polling.
+  const statusUrl = `/reports/customers/status/${args.jobId}`;
   const body = `
     <p class="eyebrow">Robo WhatsApp Cartel</p>
     <h1>${escapeHtml(args.heading)}</h1>
@@ -146,7 +154,7 @@ export function renderWaitingPage(args: {
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
     <script>
       const statusUrl = ${JSON.stringify(statusUrl)};
-      const resultUrl = ${JSON.stringify(`/reports/customers/result/${args.jobId}?secret=${encodeURIComponent(args.secret)}`)};
+      const resultUrl = ${JSON.stringify(`/reports/customers/result/${args.jobId}`)};
       async function poll() {
         try {
           const res = await fetch(statusUrl);
@@ -213,7 +221,9 @@ export function renderPendingListPage(args: {
       args.pending.length === 0
         ? `<div class="callout">Nenhuma conversa pendente encontrada -- tudo em dia.</div>`
         : `<div class="card">${rows}</div>
-           <a class="btn" href="${escapeHtml(args.confirmUrl)}">Responder todas (${args.pending.length}) →</a>`
+           <form method="POST" action="${escapeHtml(args.confirmUrl)}">
+             <button class="btn" type="submit">Responder todas (${args.pending.length}) →</button>
+           </form>`
     }
   `;
   return pageShell("Conversas sem resposta", body);
@@ -221,6 +231,7 @@ export function renderPendingListPage(args: {
 
 export function renderPendingResultPage(args: {
   answered: string[];
+  skipped: { contactName: string; reason: string }[];
   errors: { contactName: string; error: string }[];
 }): string {
   const body = `
@@ -228,11 +239,17 @@ export function renderPendingResultPage(args: {
     <h1>Respostas enviadas</h1>
     <div class="stat-row">
       <div class="stat"><div class="k">Respondidas com sucesso</div><div class="v">${args.answered.length}</div></div>
+      <div class="stat"><div class="k">Puladas (atendimento humano)</div><div class="v">${args.skipped.length}</div></div>
       <div class="stat"><div class="k">Com erro</div><div class="v">${args.errors.length}</div></div>
     </div>
     ${
       args.answered.length > 0
         ? `<div class="card"><ul class="plain">${args.answered.map((n) => `<li>${escapeHtml(n)}</li>`).join("")}</ul></div>`
+        : ""
+    }
+    ${
+      args.skipped.length > 0
+        ? `<div class="callout">${args.skipped.map((s) => `${escapeHtml(s.contactName)}: ${escapeHtml(s.reason)}`).join("<br>")}</div>`
         : ""
     }
     ${
@@ -275,7 +292,9 @@ export function renderEstimatePage(args: {
       <div class="v" style="font-family:'Fraunces',serif;font-size:28px">${formatUsd(estimatedCost)}</div>
     </div>
 
-    <a class="btn" href="${escapeHtml(confirmUrl)}">Gerar relatorio completo →</a>
+    <form method="POST" action="${escapeHtml(confirmUrl)}">
+      <button class="btn" type="submit">Gerar relatorio completo →</button>
+    </form>
   `;
   return pageShell("Estimativa do relatorio", body);
 }
@@ -359,4 +378,68 @@ export function renderReportPage(args: {
     </footer>
   `;
   return pageShell("Perfil dos clientes - Cartel", body);
+}
+
+export function renderPromptEditorPage(args: {
+  prompt: string;
+  isOverride: boolean;
+  saveUrl: string;
+  resetUrl: string;
+  saved?: boolean;
+}): string {
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Prompt de vendas</h1>
+    <p class="lede">Texto que o robo usa pra responder no WhatsApp (precos, frete, regras de
+    negocio). Editar aqui vale na hora, sem precisar de deploy.</p>
+
+    ${args.saved ? `<div class="callout">Salvo. O robo ja esta usando o texto novo.</div>` : ""}
+
+    ${
+      args.isOverride
+        ? `<div class="callout">Este texto foi editado por aqui e esta sobrepondo o padrao do
+           codigo-fonte.</div>`
+        : `<div class="callout">Nenhuma edicao feita ainda -- este e o texto padrao do codigo-fonte.</div>`
+    }
+
+    <form method="POST" action="${escapeHtml(args.saveUrl)}">
+      <textarea class="editor" name="prompt" spellcheck="false">${escapeHtml(args.prompt)}</textarea>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" type="submit">Salvar</button>
+      </div>
+    </form>
+    <form method="POST" action="${escapeHtml(args.resetUrl)}" style="margin-top:10px">
+      <button class="btn" type="submit" style="background:var(--surface-2);color:var(--ink)">
+        Restaurar padrao do codigo
+      </button>
+    </form>
+  `;
+  return pageShell("Prompt de vendas", body);
+}
+
+export function renderErrorsPage(
+  errors: { level: string; message: string; time: string; context?: unknown }[],
+): string {
+  const rows = errors
+    .map(
+      (e) => `
+      <div class="qa">
+        <div class="theme">${escapeHtml(e.time)}</div>
+        <div class="answer">${escapeHtml(e.message)}</div>
+        ${e.context ? `<div class="example"><code>${escapeHtml(JSON.stringify(e.context))}</code></div>` : ""}
+      </div>`,
+    )
+    .join("");
+
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Erros recentes</h1>
+    <p class="lede">Ultimos ${errors.length} erros registrados pelo servidor (mais recente primeiro).</p>
+    ${
+      errors.length === 0
+        ? `<div class="callout">Nenhum erro registrado desde que o servidor subiu.</div>`
+        : `<div class="card">${rows}</div>`
+    }
+  `;
+  return pageShell("Erros recentes", body);
 }

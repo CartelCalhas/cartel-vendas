@@ -13,14 +13,7 @@ import {
   renderErrorPage,
 } from "./report/render.js";
 import { createJob, getJob, completeJob, failJob } from "./report/jobs.js";
-
-function checkSecret(req: Request, res: Response): boolean {
-  if (req.query.secret !== config.webhookSecret) {
-    res.status(401).send("Acesso negado.");
-    return false;
-  }
-  return true;
-}
+import { logger } from "./logger.js";
 
 function monthsFromQuery(req: Request): number {
   return Math.max(1, Math.min(24, Number(req.query.months ?? 6)));
@@ -38,37 +31,19 @@ async function loadCorpus(
   return { list, corpus };
 }
 
-function relativeUrlWithParams(
-  req: Request,
-  path: string,
-  extra: Record<string, string>,
-): string {
-  const url = new URL(path, "http://internal");
-  for (const [key, value] of Object.entries(req.query)) {
-    if (typeof value === "string") url.searchParams.set(key, value);
-  }
-  for (const [key, value] of Object.entries(extra)) {
-    url.searchParams.set(key, value);
-  }
-  return url.pathname + url.search;
-}
-
 // Passo 1: busca as conversas no Chatwoot (pode ser lenta com o servico
 // "dormindo" no plano Free) e monta a pagina de estimativa de custo, sem
 // gastar credito da API ainda. Tambem roda em segundo plano com uma pagina
 // de espera, pelo mesmo motivo do passo 2: evitar que o pedido HTTP fique
 // aberto tempo demais e algum proxy no caminho derrube a conexao (502).
 export async function handleReportEstimate(req: Request, res: Response): Promise<void> {
-  if (!checkSecret(req, res)) return;
   const months = monthsFromQuery(req);
-  const secret = String(req.query.secret);
-  const startUrl = relativeUrlWithParams(req, "/reports/customers/start", {});
+  const startUrl = `/reports/customers/start?months=${months}`;
 
   const jobId = createJob();
   res.status(200).send(
     renderWaitingPage({
       jobId,
-      secret,
       heading: "Buscando suas conversas...",
       message: "Consultando o Chatwoot. Se o robo estava parado, isso pode levar cerca de 1 minuto para acordar -- pode deixar esta aba aberta.",
     }),
@@ -91,7 +66,7 @@ export async function handleReportEstimate(req: Request, res: Response): Promise
       renderEstimatePage({ corpus, truncated: list.truncated, months, inputTokens, confirmUrl: startUrl }),
     );
   })().catch((err) => {
-    console.error("[report] erro na estimativa:", err);
+    logger.error("Erro na estimativa do relatorio", { error: err });
     failJob(jobId, (err as Error).message);
   });
 }
@@ -100,9 +75,7 @@ export async function handleReportEstimate(req: Request, res: Response): Promise
 // de espera que fica consultando o status sozinha -- evita que o pedido
 // HTTP fique aberto por minutos e estoure algum timeout no caminho.
 export async function handleReportStart(req: Request, res: Response): Promise<void> {
-  if (!checkSecret(req, res)) return;
   const months = monthsFromQuery(req);
-  const secret = String(req.query.secret);
 
   try {
     const loaded = await loadCorpus(months);
@@ -116,7 +89,6 @@ export async function handleReportStart(req: Request, res: Response): Promise<vo
     res.status(200).send(
       renderWaitingPage({
         jobId,
-        secret,
         heading: "Gerando o relatorio...",
         message: `Analisando ${corpus.totalConversations} conversas com a Claude. Isso pode levar de 1 a 3 minutos -- pode deixar esta aba aberta, ela atualiza sozinha.`,
       }),
@@ -128,20 +100,16 @@ export async function handleReportStart(req: Request, res: Response): Promise<vo
         completeJob(jobId, html);
       })
       .catch((err) => {
-        console.error("[report] erro na analise:", err);
+        logger.error("Erro na analise do relatorio", { error: err });
         failJob(jobId, (err as Error).message);
       });
   } catch (err) {
-    console.error("[report] erro ao iniciar:", err);
+    logger.error("Erro ao iniciar o relatorio", { error: err });
     res.status(500).send(renderErrorPage(`Erro ao iniciar o relatorio: ${(err as Error).message}`));
   }
 }
 
 export function handleReportStatus(req: Request, res: Response): void {
-  if (req.query.secret !== config.webhookSecret) {
-    res.status(401).json({ status: "error", error: "acesso negado" });
-    return;
-  }
   const job = getJob(String(req.params.jobId));
   if (!job) {
     res.status(404).json({ status: "error", error: "relatorio nao encontrado (pode ter expirado)" });
@@ -151,7 +119,6 @@ export function handleReportStatus(req: Request, res: Response): void {
 }
 
 export function handleReportResult(req: Request, res: Response): void {
-  if (!checkSecret(req, res)) return;
   const job = getJob(String(req.params.jobId));
   if (!job || job.status === "processing") {
     res.status(200).send(renderErrorPage("Esse relatorio ainda esta processando ou expirou. Gere um novo."));

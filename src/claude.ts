@@ -1,13 +1,24 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config } from "./config.js";
-import { SALES_SYSTEM_PROMPT } from "./prompts/salesPrompt.js";
+import { getEffectiveSalesPrompt } from "./prompts/promptStore.js";
 import { renderPiecePng } from "./drawing.js";
+import type { SupportedImageMediaType } from "./attachments.js";
 
 const client = new Anthropic({ apiKey: config.anthropicApiKey });
+
+// Teto de tokens de saida por chamada: as respostas do bot devem ser curtas
+// (ver "Estilo" no prompt de vendas) -- alem de manter a conversa legivel no
+// WhatsApp, isso limita o gasto maximo de tokens de saida por mensagem.
+const MAX_REPLY_TOKENS = 500;
 
 export interface ChatTurn {
   role: "user" | "assistant";
   content: string;
+}
+
+export interface IncomingImage {
+  buffer: Buffer;
+  mediaType: SupportedImageMediaType;
 }
 
 export interface PieceDrawing {
@@ -64,25 +75,42 @@ function extractText(response: Anthropic.Message): string {
   return textBlock?.text?.trim() ?? "";
 }
 
+function buildUserContent(
+  userMessage: string,
+  images: IncomingImage[],
+): string | Anthropic.ContentBlockParam[] {
+  if (images.length === 0) return userMessage;
+
+  const blocks: Anthropic.ContentBlockParam[] = images.map((img) => ({
+    type: "image",
+    source: { type: "base64", media_type: img.mediaType, data: img.buffer.toString("base64") },
+  }));
+  if (userMessage) blocks.push({ type: "text", text: userMessage });
+  return blocks;
+}
+
 export async function generateReply(
   history: ChatTurn[],
   userMessage: string,
+  images: IncomingImage[] = [],
 ): Promise<GeneratedReply> {
   const messages: Anthropic.MessageParam[] = [
     ...history,
-    { role: "user", content: userMessage },
+    { role: "user", content: buildUserContent(userMessage, images) },
   ];
   const drawings: PieceDrawing[] = [];
+  const systemPrompt = getEffectiveSalesPrompt();
 
-  let response = await client.messages.create({
-    model: "claude-opus-5",
-    max_tokens: 1024,
-    system: [
-      { type: "text", text: SALES_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
-    ],
-    tools: [DRAW_PIECE_TOOL],
-    messages,
-  });
+  const callClaude = () =>
+    client.messages.create({
+      model: config.claudeModel,
+      max_tokens: MAX_REPLY_TOKENS,
+      system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
+      tools: [DRAW_PIECE_TOOL],
+      messages,
+    });
+
+  let response = await callClaude();
 
   // No maximo 3 idas e voltas -- so existe uma ferramenta e ela nao deveria
   // precisar de mais chamadas que o numero de pecas distintas de um pedido.
@@ -133,15 +161,7 @@ export async function generateReply(
     messages.push({ role: "assistant", content: response.content });
     messages.push({ role: "user", content: toolResults });
 
-    response = await client.messages.create({
-      model: "claude-opus-5",
-      max_tokens: 1024,
-      system: [
-        { type: "text", text: SALES_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
-      ],
-      tools: [DRAW_PIECE_TOOL],
-      messages,
-    });
+    response = await callClaude();
   }
 
   const rawText = extractText(response);

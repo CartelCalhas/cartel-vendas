@@ -1,10 +1,4 @@
-import { config } from "./config.js";
-
-const apiRoot = `${config.chatwootBaseUrl}/api/v1/accounts/${config.chatwootAccountId}`;
-
-function headers(): HeadersInit {
-  return { api_access_token: config.chatwootApiToken };
-}
+import { chatwootRequest, chatwootUrl, jsonHeaders } from "./chatwootClient.js";
 
 export interface ConversationSummary {
   id: number;
@@ -31,7 +25,9 @@ interface RawConversation {
 
 // A lista de conversas do Chatwoot varia de formato entre versoes:
 // as vezes `{ data: { payload: [...] } }`, as vezes `{ payload: [...] }`.
-function extractPayload(json: unknown): RawConversation[] {
+// Exportado (so pra teste) porque e a parte mais facil de quebrar sem
+// perceber se o Chatwoot mudar de formato de novo.
+export function extractPayload(json: unknown): RawConversation[] {
   if (json && typeof json === "object") {
     const obj = json as Record<string, unknown>;
     const data = obj.data as Record<string, unknown> | undefined;
@@ -64,20 +60,16 @@ export async function listConversationsSince(
   let truncated = false;
 
   outer: for (let page = 1; page <= maxPages; page++) {
-    const url = new URL(`${apiRoot}/conversations`);
+    const url = chatwootUrl("/conversations");
     url.searchParams.set("status", "all");
     url.searchParams.set("page", String(page));
     if (opts.inboxId) url.searchParams.set("inbox_id", opts.inboxId);
 
-    const res = await fetch(url, {
-      headers: headers(),
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!res.ok) {
-      throw new Error(
-        `Falha ao listar conversas (pagina ${page}): ${res.status} ${await res.text()}`,
-      );
-    }
+    const res = await chatwootRequest(
+      url,
+      { headers: jsonHeaders() },
+      `Listar conversas (pagina ${page})`,
+    );
 
     const raw = extractPayload(await res.json());
     if (raw.length === 0) break;

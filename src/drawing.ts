@@ -18,7 +18,7 @@ function escapeXml(value: string): string {
 // equipe (medida por medida). Nao tenta representar os angulos/direcoes reais
 // das dobras -- so confirma que a soma dos segmentos bate com o que o
 // cliente pediu, que e o que interessa para aprovar antes de cortar.
-function buildPieceSvg({ titulo, segmentosMm }: PieceSpec): string {
+export function buildPieceSvg({ titulo, segmentosMm }: PieceSpec): string {
   const width = 900;
   const marginX = 60;
   const marginTop = 110;

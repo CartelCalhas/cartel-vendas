@@ -1,21 +1,7 @@
 import { readFile } from "fs/promises";
 import { basename, extname } from "path";
-import { config } from "./config.js";
-
-const apiRoot = `${config.chatwootBaseUrl}/api/v1/accounts/${config.chatwootAccountId}`;
-
-function headers(): HeadersInit {
-  return {
-    "Content-Type": "application/json",
-    api_access_token: config.chatwootApiToken,
-  };
-}
-
-// Sem Content-Type aqui de proposito: o fetch define o boundary do
-// multipart/form-data sozinho a partir do FormData.
-function authHeaders(): HeadersInit {
-  return { api_access_token: config.chatwootApiToken };
-}
+import { chatwootRequest, chatwootUrl, jsonHeaders, authHeaders } from "./chatwootClient.js";
+import { logger } from "./logger.js";
 
 export interface ChatwootMessage {
   id: number;
@@ -39,42 +25,58 @@ export function isOutgoing(messageType: number | string): boolean {
 export async function fetchRecentMessages(
   conversationId: number,
 ): Promise<ChatwootMessage[]> {
-  const res = await fetch(
-    `${apiRoot}/conversations/${conversationId}/messages`,
-    { headers: headers() },
+  const res = await chatwootRequest(
+    chatwootUrl(`/conversations/${conversationId}/messages`),
+    { headers: jsonHeaders() },
+    `Buscar mensagens da conversa ${conversationId}`,
   );
-
-  if (!res.ok) {
-    throw new Error(
-      `Falha ao buscar mensagens da conversa ${conversationId}: ${res.status} ${await res.text()}`,
-    );
-  }
-
   const data = (await res.json()) as { payload?: ChatwootMessage[] };
   return data.payload ?? [];
+}
+
+export interface ConversationMeta {
+  status: string;
+  // Presente quando um atendente humano ja foi designado pra conversa.
+  assigneeId: number | null;
+}
+
+// Usado para o handoff humano: se a conversa ja tem um atendente designado ou
+// nao esta mais "open" (foi resolvida/deixada pendente manualmente por um
+// humano), o robo nao deve responder por cima. O formato exato varia entre
+// versoes do Chatwoot (assignee pode vir em `meta.assignee` ou em
+// `assignee_id` no nivel raiz) -- checamos os dois.
+export async function fetchConversationMeta(
+  conversationId: number,
+): Promise<ConversationMeta> {
+  const res = await chatwootRequest(
+    chatwootUrl(`/conversations/${conversationId}`),
+    { headers: jsonHeaders() },
+    `Buscar dados da conversa ${conversationId}`,
+  );
+  const data = (await res.json()) as {
+    status?: string;
+    assignee_id?: number | null;
+    meta?: { assignee?: { id?: number } | null };
+  };
+  return {
+    status: data.status ?? "open",
+    assigneeId: data.meta?.assignee?.id ?? data.assignee_id ?? null,
+  };
 }
 
 export async function sendReply(
   conversationId: number,
   content: string,
 ): Promise<void> {
-  const res = await fetch(
-    `${apiRoot}/conversations/${conversationId}/messages`,
+  await chatwootRequest(
+    chatwootUrl(`/conversations/${conversationId}/messages`),
     {
       method: "POST",
-      headers: headers(),
-      body: JSON.stringify({
-        content,
-        message_type: "outgoing",
-      }),
+      headers: jsonHeaders(),
+      body: JSON.stringify({ content, message_type: "outgoing" }),
     },
+    `Enviar resposta na conversa ${conversationId}`,
   );
-
-  if (!res.ok) {
-    throw new Error(
-      `Falha ao enviar resposta na conversa ${conversationId}: ${res.status} ${await res.text()}`,
-    );
-  }
 }
 
 export interface AttachmentFile {
@@ -99,16 +101,11 @@ export async function sendAttachments(
     );
   }
 
-  const res = await fetch(
-    `${apiRoot}/conversations/${conversationId}/messages`,
+  await chatwootRequest(
+    chatwootUrl(`/conversations/${conversationId}/messages`),
     { method: "POST", headers: authHeaders(), body: form },
+    `Enviar anexo na conversa ${conversationId}`,
   );
-
-  if (!res.ok) {
-    throw new Error(
-      `Falha ao enviar anexo na conversa ${conversationId}: ${res.status} ${await res.text()}`,
-    );
-  }
 }
 
 const MIME_BY_EXTENSION: Record<string, string> = {
@@ -131,4 +128,40 @@ export async function sendAttachment(
     [{ buffer, filename: basename(filePath), mimeType }],
     content,
   );
+}
+
+// Marca a conversa com uma label (sem apagar as labels que ja existem) para
+// um humano encontrar depois -- usado quando o cliente manda algo que o robo
+// nao consegue processar sozinho (audio, video, arquivo). Nao lanca em caso
+// de falha: sinalizar a conversa e "nice to have", nao deve derrubar o fluxo
+// principal de resposta.
+export async function flagForHumanReview(
+  conversationId: number,
+  label: string,
+): Promise<void> {
+  try {
+    const current = await chatwootRequest(
+      chatwootUrl(`/conversations/${conversationId}/labels`),
+      { headers: jsonHeaders() },
+      `Buscar labels da conversa ${conversationId}`,
+    );
+    const data = (await current.json()) as { payload?: string[] };
+    const labels = new Set(data.payload ?? []);
+    labels.add(label);
+
+    await chatwootRequest(
+      chatwootUrl(`/conversations/${conversationId}/labels`),
+      {
+        method: "POST",
+        headers: jsonHeaders(),
+        body: JSON.stringify({ labels: [...labels] }),
+      },
+      `Adicionar label na conversa ${conversationId}`,
+    );
+  } catch (err) {
+    logger.warn(`Nao foi possivel sinalizar a conversa ${conversationId} para revisao humana`, {
+      error: err,
+      label,
+    });
+  }
 }

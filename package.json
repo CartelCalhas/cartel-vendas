@@ -8,12 +8,14 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "ANTHROPIC_API_KEY=test-key CHATWOOT_BASE_URL=http://localhost CHATWOOT_ACCOUNT_ID=1 CHATWOOT_API_TOKEN=test-token WEBHOOK_SECRET=test-secret DATA_DIR=.test-data tsx --test $(find src -name '*.test.ts' | sort)"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
     "sharp": "^0.35.4",
     "zod": "^4.6.0"
   },
@@ -21,6 +23,6 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.2",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^5.7.3"
   }
 }
