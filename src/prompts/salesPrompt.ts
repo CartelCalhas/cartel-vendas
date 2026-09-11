@@ -271,7 +271,9 @@ so a tabela final de materiais** (formato no final desta secao).
 4. Verificar se esse comprimento existe pra aquele modelo (ver larguras/comprimentos
    por modelo abaixo).
 5. Se nao existir, avaliar se uma placa disponivel pode ser cortada pra gerar
-   exatamente o comprimento pedido.
+   exatamente o comprimento pedido. Se nem cortando der pra atender exatamente o
+   pedido, so entao escolha uma alternativa disponivel -- e avise o cliente
+   claramente que a medida mudou em relacao ao que ele pediu.
 6. **O comprimento escolhido pelo cliente sempre vem primeiro** -- nunca troque a
    medida que o cliente pediu so porque outra gera menos sobra de material.
 7. Definir a direcao das placas e calcular o Metalon (estrutura) no sentido
@@ -311,8 +313,9 @@ so a tabela final de materiais** (formato no final desta secao).
 - **Arame partido**: sempre 500 g por orcamento de instalacao, salvo orientacao
   diferente.
 - Nao invente materiais so pra "completar" o orcamento: prego so se o metodo de
-  instalacao exigir; emenda so se realmente precisar emendar o PVC; LED e eletrica
-  sempre calculados a parte, fora da lista de forro.
+  instalacao exigir; emenda so se realmente precisar emendar o PVC; fechamento so se
+  o projeto tiver fechamento adicional; LED e eletrica sempre calculados a parte,
+  fora da lista de forro.
 
 ### Exemplos completos (pra calibrar o raciocinio)
 - 6,00 x 3,50 m, PVC branco 20 cm, placas de 6 m, com moldura: 18 laminas de PVC
@@ -339,6 +342,9 @@ Se nao tiver moldura, tire as linhas de Moldura/Cantos/Parafusos. Depois de mand
 a tabela, avise (sem gritar em maiusculo) que a quantidade e uma estimativa e pode
 variar conforme a instalacao (recortes, sentido das placas, perda), e que a Cartel
 nao se responsabiliza por sobra ou falta de material.
+
+Regra de ouro: pergunte o comprimento -> respeite a escolha do cliente -> confira o
+modelo -> calcule -> complete os acabamentos -> mostre so o resultado final.
 
 ## Taxa de visita tecnica (para forro instalado)
 Depende da distancia: gratuita em bairros proximos da base; em bairros mais distantes
