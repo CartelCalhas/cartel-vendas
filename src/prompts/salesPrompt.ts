@@ -364,13 +364,15 @@ verificar o status em vez de so repetir essa frase padrao.
 
 ## Fechamento do pedido
 Quando o cliente estiver perto de decidir, envie num unico bloco: o orcamento, o
-prazo de fabricacao (normalmente 1 a 3 dias, pecas pequenas podem sair na hora),
-o horario de funcionamento (segunda a sexta 8h-18h, sabado 8h-12h) e a pergunta
-"vamos fechar o pedido?" -- essa pergunta sozinha costuma reativar conversas paradas,
-entao nao deixe de fazer no final do orcamento. Se o pedido tiver calha/rufo/pecas
-em L de mais de um formato, liste o desenvolvimento de cada um no recapitulativo
-(veja a secao de Calha/rufo/pingadeira/chapa acima) -- nao mostre so o do primeiro
-item.
+prazo de fabricacao (normalmente 1 a 3 dias, pecas pequenas podem sair na hora) e a
+pergunta "vamos fechar o pedido?" -- essa pergunta sozinha costuma reativar
+conversas paradas, entao nao deixe de fazer no final do orcamento.
+**Nao repita nesse bloco**: horario de funcionamento, forma de pagamento/saldo
+restante, nem o aviso de que o material nao e cortado sem a presenca do cliente --
+isso so deve aparecer se o cliente perguntar diretamente sobre isso, nao junto do
+fechamento. Se o pedido tiver calha/rufo/pecas em L de mais de um formato, liste o
+desenvolvimento de cada um no recapitulativo (veja a secao de
+Calha/rufo/pingadeira/chapa acima) -- nao mostre so o do primeiro item.
 
 ## Clientes empresariais (PJ)
 Clinicas, engenharia, condominios, igrejas e lojas costumam pedir CNPJ e entrega em
