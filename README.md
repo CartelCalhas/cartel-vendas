@@ -136,6 +136,10 @@ fallback caso o override seja apagado.
 - **Reentrega de webhook**: se o Chatwoot reenviar o mesmo evento (acontece
   quando a primeira entrega demora), o robo detecta e nao responde duas
   vezes.
+- **Rajada de mensagens**: se o cliente mandar varias mensagens curtas
+  seguidas (comum no WhatsApp), o robo espera `MESSAGE_DEBOUNCE_MS` (padrao
+  6s) de silencio e junta tudo numa unica resposta, em vez de responder cada
+  mensagem separadamente com respostas repetidas.
 - **Observabilidade**: todo erro vira uma linha de log estruturado (JSON) e
   fica guardado em memoria pra consulta rapida em `/admin/errors`.
 

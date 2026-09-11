@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "test": "ANTHROPIC_API_KEY=test-key CHATWOOT_BASE_URL=http://localhost CHATWOOT_ACCOUNT_ID=1 CHATWOOT_API_TOKEN=test-token WEBHOOK_SECRET=test-secret DATA_DIR=.test-data tsx --test $(find src -name '*.test.ts' | sort)"
+    "test": "ANTHROPIC_API_KEY=test-key CHATWOOT_BASE_URL=http://localhost CHATWOOT_ACCOUNT_ID=1 CHATWOOT_API_TOKEN=test-token WEBHOOK_SECRET=test-secret DATA_DIR=.test-data MESSAGE_DEBOUNCE_MS=50 tsx --test $(find src -name '*.test.ts' | sort)"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",

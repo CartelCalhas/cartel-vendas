@@ -27,6 +27,12 @@ export const config = {
   chatwootInboxId: process.env.CHATWOOT_INBOX_ID?.trim() || null,
   port: Number(process.env.PORT ?? 3000),
   historyLimit: Number(process.env.HISTORY_LIMIT ?? 15),
+  // Quanto tempo esperar em silencio antes de responder, pra juntar
+  // mensagens que o cliente manda em rajada (varias mensagens curtas
+  // seguidas) numa unica resposta em vez de uma resposta repetida pra cada
+  // uma. Aumentar deixa a resposta mais "inteligente" mas mais lenta;
+  // diminuir deixa mais rapida mas volta a responder rajadas em duplicidade.
+  messageDebounceMs: Number(process.env.MESSAGE_DEBOUNCE_MS ?? 6000),
   // Pausa manual do robo -- ver BOT_PAUSED no .env.example. Fica salvo como
   // variavel de ambiente (nao em arquivo) para nao se perder se o servico
   // reiniciar sozinho.

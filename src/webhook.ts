@@ -5,6 +5,7 @@ import { isIncoming, sendReply, flagForHumanReview } from "./chatwoot.js";
 import { answerConversation } from "./replyEngine.js";
 import { downloadImageAttachment } from "./attachments.js";
 import { markSeenOnce } from "./dedupe.js";
+import { enqueueMessage } from "./messageBatcher.js";
 import { logger } from "./logger.js";
 import { safeEqual } from "./security.js";
 
@@ -115,9 +116,16 @@ export async function handleChatwootWebhook(
   );
   const images = downloaded.filter((img): img is NonNullable<typeof img> => img !== null);
 
-  try {
-    await answerConversation(conversationId, userMessage, payload.id ?? -1, images);
-  } catch (err) {
-    logger.error(`Erro processando conversa ${conversationId}`, { error: err });
-  }
+  // Nao responde na hora: espera um pouco de silencio na conversa (ver
+  // messageBatcher.ts) pra nao mandar uma resposta separada e quase
+  // repetida pra cada mensagem de uma rajada do cliente.
+  enqueueMessage(conversationId, { id: payload.id ?? -1, text: userMessage, images }, (convId, batch) => {
+    // Reconfere a pausa aqui tambem: o robo pode ter sido pausado durante a
+    // janela de espera do debounce, depois que a mensagem ja tinha sido
+    // enfileirada.
+    if (config.botPaused) return;
+    answerConversation(convId, batch.text, batch.excludeMessageIds, batch.images).catch((err) => {
+      logger.error(`Erro processando conversa ${convId}`, { error: err });
+    });
+  });
 }

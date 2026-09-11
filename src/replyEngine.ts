@@ -28,10 +28,13 @@ const ACABAMENTOS_PHOTO_PATH = path.join(
 
 export function toChatTurns(
   messages: ChatwootMessage[],
-  excludeMessageId: number,
+  excludeMessageIds: number | number[],
 ): ChatTurn[] {
+  const excluded = new Set(
+    Array.isArray(excludeMessageIds) ? excludeMessageIds : [excludeMessageIds],
+  );
   return messages
-    .filter((m) => m.id !== excludeMessageId)
+    .filter((m) => !excluded.has(m.id))
     .filter((m) => !m.private)
     .filter((m) => !m.content_type || m.content_type === "text")
     .filter((m) => m.content)
@@ -57,7 +60,7 @@ export interface AnswerResult {
 export async function answerConversation(
   conversationId: number,
   userMessage: string,
-  excludeMessageId: number,
+  excludeMessageIds: number | number[],
   images: IncomingImage[] = [],
 ): Promise<AnswerResult> {
   // Handoff humano: se um atendente ja foi designado pra conversa, ou ela
@@ -84,7 +87,7 @@ export async function answerConversation(
   }
 
   const recent = await fetchRecentMessages(conversationId);
-  const history = toChatTurns(recent, excludeMessageId);
+  const history = toChatTurns(recent, excludeMessageIds);
 
   const reply = await generateReply(history, userMessage, images);
   if (reply.text) {
