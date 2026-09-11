@@ -52,7 +52,14 @@ export interface ListConversationsResult {
 // tambem estarao fora da janela -- e seguro parar ali.
 export async function listConversationsSince(
   cutoffSeconds: number,
-  opts: { inboxId?: string | null; maxConversations?: number; maxPages?: number } = {},
+  opts: {
+    inboxId?: string | null;
+    maxConversations?: number;
+    maxPages?: number;
+    // "all" | "open" | "resolved" | "pending" | "snoozed" -- ver status do
+    // Chatwoot. Padrao "all" (mesmo comportamento de antes).
+    status?: string;
+  } = {},
 ): Promise<ListConversationsResult> {
   const maxConversations = opts.maxConversations ?? 400;
   const maxPages = opts.maxPages ?? 60;
@@ -61,7 +68,7 @@ export async function listConversationsSince(
 
   outer: for (let page = 1; page <= maxPages; page++) {
     const url = chatwootUrl("/conversations");
-    url.searchParams.set("status", "all");
+    url.searchParams.set("status", opts.status ?? "all");
     url.searchParams.set("page", String(page));
     if (opts.inboxId) url.searchParams.set("inbox_id", opts.inboxId);
 

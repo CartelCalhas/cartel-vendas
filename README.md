@@ -110,6 +110,11 @@ nunca fica salvo no historico do navegador nem em log de acesso.
   padrao" volta a usar o texto de `src/prompts/salesPrompt.ts`.
 - `/admin/errors` -- mostra os ultimos erros registrados pelo servidor, para
   diagnostico rapido sem precisar abrir o log do host.
+- `/admin/feedback-followup` -- lista clientes com conversa **resolvida** no
+  Chatwoot ha entre 2 e 30 dias que ainda nao receberam um pedido de
+  feedback, com opcao de enviar a mensagem pra todos de uma vez. Cada
+  conversa e marcada com a label `feedback-solicitado` depois do envio, pra
+  nao aparecer de novo numa proxima varredura.
 
 ## Customizar o comportamento do bot
 

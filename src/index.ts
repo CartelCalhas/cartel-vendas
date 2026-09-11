@@ -14,6 +14,10 @@ import {
   handlePendingList,
   handlePendingStart,
 } from "./pendingRepliesRoute.js";
+import {
+  handleFeedbackList,
+  handleFeedbackStart,
+} from "./feedbackFollowupRoute.js";
 import { handlePromptShow, handlePromptSave, handlePromptReset } from "./promptRoute.js";
 import { renderErrorsPage } from "./report/render.js";
 
@@ -60,6 +64,9 @@ admin.get("/reports/customers/result/:jobId", handleReportResult);
 
 admin.get("/admin/pending-replies", asyncRoute(handlePendingList));
 admin.post("/admin/pending-replies/start", requireSameOriginForStateChange, asyncRoute(handlePendingStart));
+
+admin.get("/admin/feedback-followup", asyncRoute(handleFeedbackList));
+admin.post("/admin/feedback-followup/start", requireSameOriginForStateChange, asyncRoute(handleFeedbackStart));
 
 admin.get("/admin/prompt", handlePromptShow);
 admin.post("/admin/prompt", requireSameOriginForStateChange, handlePromptSave);

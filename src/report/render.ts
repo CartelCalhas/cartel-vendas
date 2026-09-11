@@ -261,6 +261,67 @@ export function renderPendingResultPage(args: {
   return pageShell("Respostas enviadas", body);
 }
 
+export function renderFeedbackListPage(args: {
+  candidates: { contactName: string; contactHandle: string; daysSinceResolved: number }[];
+  confirmUrl: string;
+}): string {
+  const rows = args.candidates
+    .map(
+      (c) => `
+      <div class="qa">
+        <div class="theme">${escapeHtml(c.contactName)}${c.contactHandle ? ` <span style="font-weight:400;color:var(--muted)">(${escapeHtml(c.contactHandle)})</span>` : ""}<span class="pill">ha ${c.daysSinceResolved}d</span></div>
+      </div>`,
+    )
+    .join("");
+
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Pedir feedback pos-atendimento</h1>
+    <p class="lede">Conversas resolvidas ha pelo menos 2 dias que ainda nao receberam o pedido de
+    feedback. Confira a lista antes de mandar -- isso vai enviar uma mensagem pra cada uma
+    perguntando como foi o atendimento e o que pode melhorar.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="k">Clientes pra pedir feedback</div><div class="v">${args.candidates.length}</div></div>
+    </div>
+
+    ${
+      args.candidates.length === 0
+        ? `<div class="callout">Nenhum cliente novo pra pedir feedback agora -- tudo em dia.</div>`
+        : `<div class="card">${rows}</div>
+           <form method="POST" action="${escapeHtml(args.confirmUrl)}">
+             <button class="btn" type="submit">Enviar pedido de feedback (${args.candidates.length}) →</button>
+           </form>`
+    }
+  `;
+  return pageShell("Pedir feedback pos-atendimento", body);
+}
+
+export function renderFeedbackResultPage(args: {
+  sent: string[];
+  errors: { contactName: string; error: string }[];
+}): string {
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel</p>
+    <h1>Pedidos de feedback enviados</h1>
+    <div class="stat-row">
+      <div class="stat"><div class="k">Enviados com sucesso</div><div class="v">${args.sent.length}</div></div>
+      <div class="stat"><div class="k">Com erro</div><div class="v">${args.errors.length}</div></div>
+    </div>
+    ${
+      args.sent.length > 0
+        ? `<div class="card"><ul class="plain">${args.sent.map((n) => `<li>${escapeHtml(n)}</li>`).join("")}</ul></div>`
+        : ""
+    }
+    ${
+      args.errors.length > 0
+        ? `<div class="callout">${args.errors.map((e) => `${escapeHtml(e.contactName)}: ${escapeHtml(e.error)}`).join("<br>")}</div>`
+        : ""
+    }
+  `;
+  return pageShell("Pedidos de feedback enviados", body);
+}
+
 export function renderEstimatePage(args: {
   corpus: CorpusResult;
   truncated: boolean;

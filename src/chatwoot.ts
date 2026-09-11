@@ -144,23 +144,24 @@ export async function sendAttachment(
   );
 }
 
-// Marca a conversa com uma label (sem apagar as labels que ja existem) para
-// um humano encontrar depois -- usado quando o cliente manda algo que o robo
-// nao consegue processar sozinho (audio, video, arquivo). Nao lanca em caso
-// de falha: sinalizar a conversa e "nice to have", nao deve derrubar o fluxo
-// principal de resposta.
-export async function flagForHumanReview(
-  conversationId: number,
-  label: string,
-): Promise<void> {
+export async function fetchConversationLabels(conversationId: number): Promise<string[]> {
+  const res = await chatwootRequest(
+    chatwootUrl(`/conversations/${conversationId}/labels`),
+    { headers: jsonHeaders() },
+    `Buscar labels da conversa ${conversationId}`,
+  );
+  const data = (await res.json()) as { payload?: string[] };
+  return data.payload ?? [];
+}
+
+// Adiciona uma label na conversa sem apagar as que ja existem (o POST do
+// Chatwoot substitui a lista inteira, entao sempre buscamos a atual antes).
+// Nao lanca em caso de falha: marcar a conversa e "nice to have", nao deve
+// derrubar o fluxo principal de quem chamou.
+export async function addConversationLabel(conversationId: number, label: string): Promise<void> {
   try {
-    const current = await chatwootRequest(
-      chatwootUrl(`/conversations/${conversationId}/labels`),
-      { headers: jsonHeaders() },
-      `Buscar labels da conversa ${conversationId}`,
-    );
-    const data = (await current.json()) as { payload?: string[] };
-    const labels = new Set(data.payload ?? []);
+    const current = await fetchConversationLabels(conversationId);
+    const labels = new Set(current);
     labels.add(label);
 
     await chatwootRequest(
@@ -173,9 +174,14 @@ export async function flagForHumanReview(
       `Adicionar label na conversa ${conversationId}`,
     );
   } catch (err) {
-    logger.warn(`Nao foi possivel sinalizar a conversa ${conversationId} para revisao humana`, {
+    logger.warn(`Nao foi possivel adicionar a label "${label}" na conversa ${conversationId}`, {
       error: err,
-      label,
     });
   }
+}
+
+// Usado quando o cliente manda algo que o robo nao consegue processar
+// sozinho (audio, video, arquivo), pra um humano encontrar depois.
+export async function flagForHumanReview(conversationId: number, label: string): Promise<void> {
+  await addConversationLabel(conversationId, label);
 }
