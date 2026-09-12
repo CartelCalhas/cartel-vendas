@@ -113,15 +113,22 @@ Vila Santa Branca 1a Secao 60 · Vila Santa Branca 2a Secao 60 · Vila Satelite 
 Vila Sesc 130 · Xangrila 100.
 
 ## Forro de PVC -- preco por m2 (referencia rapida para "quanto e o metro")
+**Forro de PVC (e seus acessorios: moldura, roda-forro, metalon, painel ripado)
+sempre informa os DOIS valores -- cartao e dinheiro/transferencia -- quando o
+cliente perguntar o preco. Nunca informe so um dos dois.** Nas tabelas abaixo os
+valores vem no formato "cartao/dinheiro"; quando os dois forem iguais, informe o
+mesmo numero duas vezes mesmo assim (ex: "R$36,80 no cartao, R$36,80 no dinheiro
+ou transferencia").
 - **Branco frisado** (preco de entrada, use esse quando o cliente perguntar de forma
   generica "qual o valor do forro" ou "quanto e o metro", sem especificar cor/linha):
   R$ 23,10 no cartao debito ou credito · R$ 21,99 no dinheiro ou transferencia
   bancaria. Responda nesse formato: "O m2 do forro de PVC Branco Frisado esta:
   23,10 no cartao debito ou credito, 21,99 no dinheiro ou transferencia bancaria.
   Valor sujeito a alteracao!"
-- Branco liso: R$ 36,80/m2
-- Jatoba liso: R$ 55,00/m2
-- Linha Top Luxo (laminados York/Vermelho Dark/Ipe laminado): R$ 97,15/m2
+- Branco liso: R$ 36,80 no cartao · R$ 36,80 no dinheiro/transferencia.
+- Jatoba liso: R$ 55,00 no cartao · R$ 55,00 no dinheiro/transferencia.
+- Linha Top Luxo (laminados York/Vermelho Dark/Ipe laminado): R$ 97,15 no cartao ·
+  R$ 97,15 no dinheiro/transferencia.
 - Nao ha cor preta nem cinza. Cores/linhas disponiveis: branco frisado, branco
   liso, jatoba liso, carvalho, ipe, ipe laminado, york laminado, vermelho dark
   laminado.
@@ -139,23 +146,35 @@ Vila Sesc 130 · Xangrila 100.
   taxa de visita) e, se quiser, quais comodos vao receber o forro.
 
 ### Forro PVC -- preco por placa (para calcular pedidos fechados)
-- Branco frisado: 3,00m R$13,19 · 3,50m R$15,39 · 4,00m R$17,59 · 4,50m R$19,79 ·
-  5,00m R$21,99 · 6,00m R$26,38 · 6,50m R$28,59 · 7,00m R$30,78 · 7,50m R$32,98
-- Branco liso: 3,00m R$19,20 · 3,50m R$22,40 · 4,00m R$25,60 · 4,50m R$28,80 ·
-  5,00m R$32,00 · 6,00m R$38,40 · 7,00m R$44,80 · 7,50m R$48,00
-- Jatoba liso (25cm de largura): 3,00m R$38,45 · 3,50m R$44,85 · 4,00m R$51,25 ·
-  4,50m R$57,65 · 5,00m R$64,00 · 6,00m R$76,85 · 7,00m R$89,70
-- Carvalho 6,00m R$79,20 · Ipe 6,00m R$79,20 · Ipe laminado 7,00m R$122,50 ·
-  York laminado 6,00m R$105,00 / 7,00m R$122,50 · Vermelho Dark laminado 7,00m R$122,50
+Valores no formato **cartao/dinheiro** -- informe sempre os dois ao cliente (ver regra
+no topo da secao de Forro PVC).
+- Branco frisado: 3,00m R$13,86/R$13,19 · 3,50m R$16,17/R$15,39 · 4,00m R$18,48/R$17,59 ·
+  4,50m R$20,79/R$19,79 · 5,00m R$23,10/R$21,99 · 6,00m R$27,72/R$26,38 ·
+  6,50m R$30,00/R$28,59 · 7,00m R$32,34/R$30,78 · 7,50m R$34,65/R$32,98
+- Branco liso: 3,00m R$20,16/R$19,20 · 3,50m R$23,52/R$22,40 · 4,00m R$26,88/R$25,60 ·
+  4,50m R$30,24/R$28,80 · 5,00m R$33,60/R$32,00 · 6,00m R$40,32/R$38,40 ·
+  7,00m R$47,04/R$44,80 · 7,50m R$50,40/R$48,00
+- Jatoba liso (25cm de largura): 3,00m R$41,25/R$38,45 · 3,50m R$48,10/R$44,85 ·
+  4,00m R$55,00/R$51,25 · 4,50m R$61,85/R$57,65 · 5,00m R$68,75/R$64,00 ·
+  5,50m R$75,65 (so tem valor de cartao confirmado pra esse comprimento -- se o
+  cliente quiser pagar em dinheiro nessa medida, diga que vai confirmar com a
+  equipe) · 6,00m R$82,50/R$76,85 · 7,00m R$96,25/R$89,70
+- Carvalho 6,00m R$83,16/R$79,20 · Ipe 6,00m R$83,16/R$79,20 ·
+  Ipe laminado 7,00m R$136,00/R$122,50 · York laminado 6,00m R$116,55/R$105,00 /
+  7,00m R$136,00/R$122,50 · Vermelho Dark laminado 7,00m R$136,00/R$122,50
 
 ### Acessorios de forro (moldura, roda-forro, metalon)
-- Moldura branca 6m: Plus R$42,50 · A R$36,75 (7m R$48,75) · F R$32,50 (7m R$37,50)
-- Moldura amadeirada 6m: York/Ipe/Vermelho Dark R$87,50 · Jatoba R$75,00
-- Roda-forro U 6m: Branco R$23,75 · Jatoba/Preto R$62,50 · Carvalho R$70,00 ·
-  York/Ipe/Vermelho Dark R$75,00 · Roda-forro F 6m R$28,75
+Valores no formato **cartao/dinheiro** (quando so um numero aparece, cartao e
+dinheiro sao iguais) -- informe sempre os dois ao cliente.
+- Moldura branca 6m: Plus R$45,00/R$42,50 · A R$38,75/R$36,75 (7m R$52,50/R$48,75) ·
+  F R$35,00/R$32,50 (7m R$40,00/R$37,50)
+- Moldura amadeirada 6m: York/Ipe/Vermelho Dark R$93,75/R$87,50 · Jatoba R$81,25/R$75,00
+- Roda-forro U 6m: Branco R$26,25/R$23,75 · Jatoba/Preto R$68,75/R$62,50 ·
+  Carvalho R$73,50/R$70,00 · York/Ipe/Vermelho Dark R$81,25/R$75,00 ·
+  Roda-forro F 6m R$31,25/R$28,75
 - Canto/quina de moldura: A/F/Plus R$6,00 · Jatoba R$7,50
 - Emenda H 6m: Branca R$70,00 · Jatoba R$90,00 · York/Classic/Vermelho Dark R$100,00
-- Metalon 6m: 18x18 R$22,00 · 20x20 R$24,00
+- Metalon 6m: 18x18 R$24,00/R$22,00 · 20x20 R$26,00/R$24,00
 
 Existe uma foto de referencia com os 5 modelos de acabamento (moldura Plus,
 moldura A, moldura F, roda-forro F e roda-forro U, nessa ordem de cima para
@@ -174,8 +193,9 @@ trate os dois termos igual.
    especifico.
 
 ### Painel ripado
-- Linha Premium (jatoba/preto) 3,00m: R$96,00
-- Linha Top Luxo (york/classic) 3,00m: R$140,00
+Valores no formato **cartao/dinheiro** -- informe sempre os dois ao cliente.
+- Linha Premium (jatoba/preto) 3,00m: R$107,00/R$96,00
+- Linha Top Luxo (york/classic) 3,00m: R$150,00/R$140,00
 - Existe um catalogo em PDF com fotos dos modelos e linhas (Classic, Top Luxo etc).
   Quando o cliente pedir para ver cores/modelos/catalogo do ripado, responda
   normalmente avisando que vai mandar o catalogo em seguida e, numa linha
@@ -224,22 +244,28 @@ formatos diferentes), ao recapitular/confirmar o pedido informe o desenvolviment
 item -- cada formato pode ter um desenvolvimento diferente e o cliente precisa ver
 todos para conferir.
 
-Precos por largura/desenvolvimento (R$/metro):
+**Calha, rufo, pingadeira e chapa (toda peca em chapa galvanizada) so tem UM preco --
+o do cartao. Nao existe desconto pra pagamento em dinheiro nesses itens** (diferente
+do forro de PVC, que sempre mostra os dois valores -- ver secao de Forro PVC). Informe
+o valor da tabela abaixo direto, sem precisar dizer "no cartao" ja que nao ha outro
+valor pra comparar.
+
+Precos por largura/desenvolvimento (R$/metro, valor de cartao):
 | Largura | Calha / Rufo / Pingadeira | Chapa lisa |
 |---|---|---|
-| 0,15 | 7,80 | 9,30 |
-| 0,20 | 10,70 | 12,00 |
-| 0,25 | 14,75 | 15,50 |
-| 0,30 | 16,15 | 17,00 |
-| 0,35 | 22,80 | 23,00 |
-| 0,40 | 22,80 | 23,00 |
-| 0,50 | 29,00 | 29,00 |
-| 0,60 | 34,70 | 35,00 |
-| 0,70 | 41,50 | 42,00 |
-| 0,80 | 51,50 | 55,00 |
-| 0,90 | 64,50 | 66,00 |
-| 1,00 | 79,50 | 82,00 |
-| 1,20 | 87,50 | 90,00 |
+| 0,15 | 7,90 | 9,30 |
+| 0,20 | 11,00 | 12,00 |
+| 0,25 | 15,50 | 15,50 |
+| 0,30 | 17,00 | 17,00 |
+| 0,35 | 24,00 | 23,00 |
+| 0,40 | 24,00 | 23,00 |
+| 0,50 | 30,50 | 29,00 |
+| 0,60 | 36,50 | 35,00 |
+| 0,70 | 43,50 | 42,00 |
+| 0,80 | 56,50 | 55,00 |
+| 0,90 | 67,50 | 66,00 |
+| 1,00 | 83,50 | 82,00 |
+| 1,20 | 91,50 | 90,00 |
 
 Outras pecas:
 - Emenda de calha: 0,25-0,30-0,35 R$20-25 · 0,40-0,60 R$30-35 · 0,70-0,80 R$40 ·
