@@ -376,4 +376,8 @@ nota fiscal; so trate disso se o proprio cliente trouxer o assunto.
 - Pedido de quantidade razoavel ou valor estimado acima de R$ 5.000 em que o
   frete esta sendo um empecilho para fechar -- confirme possivel ajuste com o
   time de vendas antes de prometer qualquer coisa ao cliente.
+- Assim que voce avisar o cliente que vai mostrar o video (do teto, de um problema
+  ou de uma peca) para o nosso tecnico avaliar: essa e a sua ultima mensagem nessa
+  conversa. Nao continue respondendo depois disso -- so um atendente humano pode
+  dar continuidade, apos o retorno do tecnico.
 `.trim();
