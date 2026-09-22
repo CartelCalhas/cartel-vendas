@@ -1,5 +1,6 @@
 import type { CorpusResult } from "./corpus.js";
 import type { InsightsReport } from "./analyze.js";
+import type { StyleManual } from "./styleManualAnalyze.js";
 import type Anthropic from "@anthropic-ai/sdk";
 
 const OPUS5_INPUT_PER_M = 5;
@@ -250,16 +251,25 @@ export function renderEstimatePage(args: {
   months: number;
   inputTokens: number;
   confirmUrl: string;
+  heading?: string;
+  lede?: string;
+  confirmLabel?: string;
+  pageTitle?: string;
 }): string {
   const { corpus, truncated, months, inputTokens, confirmUrl } = args;
+  const heading = args.heading ?? `Relatorio de conversas dos ultimos ${months} meses`;
+  const lede =
+    args.lede ??
+    "Antes de gerar o relatorio final (que usa credito da conta Claude), confira o tamanho dos dados encontrados e o custo estimado.";
+  const confirmLabel = args.confirmLabel ?? "Gerar relatorio completo →";
   const estimatedCost =
     (inputTokens / 1_000_000) * OPUS5_INPUT_PER_M +
     (ASSUMED_OUTPUT_TOKENS_FOR_ESTIMATE / 1_000_000) * OPUS5_OUTPUT_PER_M;
 
   const body = `
     <p class="eyebrow">Robo WhatsApp Cartel</p>
-    <h1>Relatorio de conversas dos ultimos ${months} meses</h1>
-    <p class="lede">Antes de gerar o relatorio final (que usa credito da conta Claude), confira o tamanho dos dados encontrados e o custo estimado.</p>
+    <h1>${escapeHtml(heading)}</h1>
+    <p class="lede">${escapeHtml(lede)}</p>
 
     <div class="stat-row">
       <div class="stat"><div class="k">Conversas encontradas</div><div class="v">${corpus.totalConversations}</div></div>
@@ -275,9 +285,99 @@ export function renderEstimatePage(args: {
       <div class="v" style="font-family:'Fraunces',serif;font-size:28px">${formatUsd(estimatedCost)}</div>
     </div>
 
-    <a class="btn" href="${escapeHtml(confirmUrl)}">Gerar relatorio completo →</a>
+    <a class="btn" href="${escapeHtml(confirmUrl)}">${escapeHtml(confirmLabel)}</a>
   `;
-  return pageShell("Estimativa do relatorio", body);
+  return pageShell(args.pageTitle ?? "Estimativa do relatorio", body);
+}
+
+export function renderStyleManualPage(args: {
+  corpus: CorpusResult;
+  truncated: boolean;
+  months: number;
+  manual: StyleManual;
+  usage: Anthropic.Usage;
+}): string {
+  const { corpus, truncated, months, manual, usage } = args;
+  const realCost =
+    (usage.input_tokens / 1_000_000) * OPUS5_INPUT_PER_M +
+    (usage.output_tokens / 1_000_000) * OPUS5_OUTPUT_PER_M;
+
+  const body = `
+    <p class="eyebrow">Robo WhatsApp Cartel · ultimos ${months} meses</p>
+    <h1>Manual de Atendimento e Estilo</h1>
+    <p class="lede">Gerado a partir de ${corpus.totalConversations} conversas reais do WhatsApp da Cartel (${corpus.uniqueContacts} clientes, ${corpus.totalCustomerMessages} mensagens de clientes).</p>
+    ${truncated ? `<div class="callout">Este manual usou as ${corpus.totalConversations} conversas mais recentes do periodo (havia mais do que o limite de seguranca desta versao).</div>` : ""}
+
+    <section>
+      <h2>Conversas por mes</h2>
+      ${renderChart(corpus.monthly)}
+    </section>
+
+    <section>
+      <h2>1. Diretrizes de tom de voz</h2>
+      <div class="card">
+        <p style="margin:0 0 16px">${escapeHtml(manual.tom_de_voz.descricao_geral)}</p>
+        <ul class="plain">
+          <li><b>Emojis:</b> ${escapeHtml(manual.tom_de_voz.uso_de_emojis)}</li>
+          <li><b>Formalidade:</b> ${escapeHtml(manual.tom_de_voz.formalidade)}</li>
+          <li><b>Tamanho das respostas:</b> ${escapeHtml(manual.tom_de_voz.tamanho_das_respostas)}</li>
+        </ul>
+        ${
+          manual.tom_de_voz.observacoes.length > 0
+            ? `<ul class="plain" style="margin-top:12px">${manual.tom_de_voz.observacoes.map((o) => `<li>${escapeHtml(o)}</li>`).join("")}</ul>`
+            : ""
+        }
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Guia de fatos verdadeiros</h2>
+      <div class="card">
+        ${manual.guia_fatos_verdadeiros
+          .map(
+            (g) => `
+          <div class="qa">
+            <div class="theme">${escapeHtml(g.pergunta)}<span class="pill">${escapeHtml(g.categoria)}</span></div>
+            <div class="answer">${escapeHtml(g.resposta_padrao)}</div>
+          </div>`,
+          )
+          .join("")}
+      </div>
+    </section>
+
+    <section>
+      <h2>3. O que nao fazer</h2>
+      <div class="card">
+        ${manual.o_que_nao_fazer
+          .map(
+            (x) => `
+          <div class="qa">
+            <div class="theme">${escapeHtml(x.comportamento)}</div>
+            <div class="example">${escapeHtml(x.motivo)}</div>
+          </div>`,
+          )
+          .join("")}
+      </div>
+    </section>
+
+    ${
+      manual.informacoes_faltantes.length > 0
+        ? `<section>
+      <h2>Informacoes que faltam confirmar</h2>
+      <div class="callout">
+        <ul class="plain" style="margin:0">
+          ${manual.informacoes_faltantes.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}
+        </ul>
+      </div>
+    </section>`
+        : ""
+    }
+
+    <footer>
+      Custo real desta analise: ${formatUsd(realCost)} (${usage.input_tokens.toLocaleString("pt-BR")} tokens de entrada, ${usage.output_tokens.toLocaleString("pt-BR")} de saida) &middot; gerado pelo robo da Cartel com Claude.
+    </footer>
+  `;
+  return pageShell("Manual de Atendimento e Estilo - Cartel", body);
 }
 
 export function renderReportPage(args: {

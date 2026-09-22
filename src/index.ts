@@ -11,6 +11,10 @@ import {
   handlePendingList,
   handlePendingStart,
 } from "./pendingRepliesRoute.js";
+import {
+  handleStyleManualEstimate,
+  handleStyleManualStart,
+} from "./styleManualRoute.js";
 
 const app = express();
 app.use(express.json());
@@ -59,6 +63,22 @@ app.get("/admin/pending-replies/start", (req, res) => {
 // A pagina de espera (renderWaitingPage) sempre consulta o status/resultado
 // em /reports/customers/... -- e o mesmo job store generico, entao a rotina
 // de pendencias reaproveita esses dois endpoints ja registrados acima.
+
+app.get("/reports/style-manual", (req, res) => {
+  handleStyleManualEstimate(req, res).catch((err) => {
+    console.error("[style-manual] erro inesperado:", err);
+    if (!res.headersSent) res.status(500).send("Erro inesperado.");
+  });
+});
+
+app.get("/reports/style-manual/start", (req, res) => {
+  handleStyleManualStart(req, res).catch((err) => {
+    console.error("[style-manual] erro inesperado:", err);
+    if (!res.headersSent) res.status(500).send("Erro inesperado.");
+  });
+});
+// Reaproveita /reports/customers/status/:jobId e /reports/customers/result/:jobId
+// (mesmo job store generico) para acompanhar e exibir o resultado.
 
 app.listen(config.port, () => {
   console.log(`Cartel WhatsApp bot rodando na porta ${config.port}`);
