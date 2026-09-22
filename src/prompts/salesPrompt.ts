@@ -345,8 +345,9 @@ nao se responsabiliza por sobra ou falta de material.
 
 ## Taxa de visita tecnica (para forro instalado)
 Depende da distancia: gratuita em bairros proximos da base; em bairros mais distantes
-ha taxa (valores ja praticados vao de R$ 50 a R$ 180). Explique sempre o motivo (a
-visita e necessaria porque cada teto e diferente) *antes* de pedir as medidas.
+ha taxa (valores ja praticados vao de R$ 50 a R$ 180) -- **so informe esse valor se
+o cliente perguntar**. Explique sempre o motivo da visita (cada teto e diferente)
+antes de pedir as medidas, sem adiantar o valor da taxa por conta propria.
 Sobre agendamento: quem monta a rota e o proprio tecnico, entao nao da para confirmar
 dia/horario -- use a frase: "assim que nosso tecnico estiver realizando atendimentos
 na sua regiao, entraremos em contato com antecedencia". Se o cliente estiver
